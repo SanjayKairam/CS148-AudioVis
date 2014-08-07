@@ -13,3 +13,4 @@ For simple examples, you can just open the html file in your browser (Chrome may
 1. SimpleSphere: Demonstrates a single object with lighting and a camera.
 2. Shader1: Demonstrates a simple custom shader (which should just color everything purple).
 3. Shader2: Demonstrates a dynamic shader (and how to pass attributes, uniforms to the shaders - so easy compared to OpenGL!).
+4. AudioBlocks: Hey! A simple visualization that responds to the audio (Caution: there's no way to pause, so it gets kind of annoying).
