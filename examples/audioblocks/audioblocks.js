@@ -52,10 +52,10 @@ $("#container").append(renderer.domElement);
 var cubes = new Array();
 
 var i = 0;
-for(var x = 0; x < 30; x += 2) {
+for(var x = 0; x < 32; x += 2) {
 	var j = 0;
 	cubes[i] = new Array();
-	for(var y = 0; y < 30; y += 2) {
+	for(var y = 0; y < 32; y += 2) {
 		var geometry = new THREE.CubeGeometry(1.5, 1.5, 1.5);
 		
 		var material = new THREE.MeshPhongMaterial({

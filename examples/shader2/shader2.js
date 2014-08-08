@@ -48,27 +48,27 @@ $("#container").append(renderer.domElement);
  * Invoking the Shaders *
  ************************/
 
-    var attributes = {
-      displacement: {
-        type: 'f', // a float
-        value: [] // an empty array
-      }
-    };
+var attributes = {
+  displacement: {
+    type: 'f', // a float
+    value: [] // an empty array
+  }
+};
 
-    var uniforms = {
-      amplitude: {
-        type: 'f', // a float
-        value: 0
-      }
-    };
+var uniforms = {
+  amplitude: {
+    type: 'f', // a float
+    value: 0
+  }
+};
 
-    // Create the sphere material using shader
-    var sphereMaterial = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      attributes: attributes,
-      vertexShader: $("#vertexshader").text(),
-      fragmentShader: $("#fragmentshader").text()
-    });
+// Create the sphere material using shader
+var sphereMaterial = new THREE.ShaderMaterial({
+  uniforms: uniforms,
+  attributes: attributes,
+  vertexShader: $("#vertexshader").text(),
+  fragmentShader: $("#fragmentshader").text()
+});
 
 /*****************
  * Create Sphere *
