@@ -35,7 +35,8 @@ var w = $(window).width(),
 var view_angle = 50,
 	aspect_ratio = w / h,
 	near = 1,
-	far = 1000;
+	far = 1000,
+	mode = "day";
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -64,7 +65,7 @@ for(var x = 0; x < 32; x += 2) {
 	cubes[i] = new Array();
 	for(var y = 0; y < 32; y += 2) {
 
-		cubes[i][j] = createBuilding();
+		cubes[i][j] = createBuilding(mode);
 		cubes[i][j].position = new THREE.Vector3(x, 0, y);
 		
 		scene.add(cubes[i][j]);
@@ -77,27 +78,18 @@ for(var x = 0; x < 32; x += 2) {
  * Set lighting *
  ****************/
 
+// TODO - PLAY WITH LIGHTING
+// Possibly different lighting settings for different modes?
+
 // Add Ambient light
 var light = new THREE.AmbientLight(0x505050);
 scene.add(light);
 
 // Add Directional Lights
 var directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-directionalLight.position.set(0, 1, 1);
+directionalLight.position.set(3, 1.5, 3);
 scene.add(directionalLight);
 
-directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-directionalLight.position.set(1, 1, 0);
-scene.add(directionalLight);
-
-
-directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-directionalLight.position.set(0, -1, -1);
-scene.add(directionalLight);
-
-directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-directionalLight.position.set(-1, -1, 0);
-scene.add(directionalLight);
 
 /****************
  * Set Controls *
