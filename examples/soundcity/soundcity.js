@@ -60,10 +60,10 @@ $("#container").append(renderer.domElement);
 var cubes = new Array();
 
 var i = 0;
-for(var x = 0; x < 32; x += 2) {
+for(var x = -16; x < 16; x += 2) {
 	var j = 0;
 	cubes[i] = new Array();
-	for(var y = 0; y < 32; y += 2) {
+	for(var y = -16; y < 16; y += 2) {
 
 		cubes[i][j] = createBuilding(mode);
 		cubes[i][j].position = new THREE.Vector3(x, 0, y);
@@ -82,7 +82,7 @@ for(var x = 0; x < 32; x += 2) {
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x505050);
+var light = new THREE.AmbientLight(0x605550);
 scene.add(light);
 
 // Add Directional Lights
@@ -132,16 +132,6 @@ var render = function () {
 
 // Don't forget to call render! That was a stupid problem to debug.
 render();
-
-function randomFairColor() {
-	var min = 64;
-	var max = 224;
-	var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;
-	var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
-	var b = (Math.floor(Math.random() * (max - min + 1)) + min);
-	return r + g + b;
-}
-
 
 
 
