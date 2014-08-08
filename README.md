@@ -2,7 +2,15 @@ CS 148: Audio Visualization Project
 
 Overview
 --------
-To be added when we start actually putting the project together.
+Our current V1 is currently in examples/soundcity. Here's the basic outline for what's been done and a speculative list of what needs to be done.
+1. Starter project - read in audio and map to grid of blocks arranged in XZ plane [COMPLETED]
+2. Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY]
+3. Generate textures to style blocks like buildings [COMPLETED]
+4. Clean up camera controls [UNASSIGNED]
+5. Add "ground" and "sky" so the city isn't floating in space. Possibly roads? [UNASSIGNED]
+6. Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
+7. Create additional textures and user controls [UNASSIGNED]
+8. Add music controls (pause, upload song, etc.) [UNASSIGNED]
 
 Examples
 --------
