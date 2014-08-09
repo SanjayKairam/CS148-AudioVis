@@ -4,7 +4,7 @@ Overview
 --------
 Our current V1 is currently in examples/soundcity. Here's the basic outline for what's been done and a speculative list of what needs to be done.
 1. Starter project - read in audio and map to grid of blocks arranged in XZ plane [COMPLETED]
-2. Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY]
+2. Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY-- COMPLETED]
 3. Generate textures to style blocks like buildings [COMPLETED]
 4. Clean up camera controls [UNASSIGNED]
 5. Add "ground" and "sky" so the city isn't floating in space. [COMPLETED]
