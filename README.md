@@ -1,6 +1,9 @@
 CS 148: Audio Visualization Project
 
+testing testing
+
 Overview
+
 --------
 Our current V1 is currently in examples/soundcity. Here's the basic outline for what's been done and a speculative list of what needs to be done.
 1. Starter project - read in audio and map to grid of blocks arranged in XZ plane [COMPLETED]
