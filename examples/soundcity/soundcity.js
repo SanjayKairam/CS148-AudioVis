@@ -40,7 +40,7 @@ var view_angle = 50,
 	aspect_ratio = w / h,
 	near = 1,
 	far = 1000,
-	mode = "night";
+	mode = "day";
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -150,8 +150,8 @@ var render = function () {
             		var iVal = xArr[i] - 1;
             		var jVal = yArr[i] - 1;
 			// Scale each cube according to "boost", calculated in audio.js
-			var scale = (array[k] + boost) / 30;
-			cubes[iVal][jVal].scale.z = (scale < 1 ? 1 : scale);
+			var scale = (array[k] + boost) / 75;
+			cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
 			k += (k < array.length ? 1 : 0);
 		}
 	}
