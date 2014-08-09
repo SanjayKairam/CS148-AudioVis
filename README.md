@@ -7,10 +7,11 @@ Our current V1 is currently in examples/soundcity. Here's the basic outline for 
 2. Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY]
 3. Generate textures to style blocks like buildings [COMPLETED]
 4. Clean up camera controls [UNASSIGNED]
-5. Add "ground" and "sky" so the city isn't floating in space. Possibly roads? [UNASSIGNED]
-6. Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
-7. Create additional textures and user controls [UNASSIGNED]
-8. Add music controls (pause, upload song, etc.) [UNASSIGNED]
+5. Add "ground" and "sky" so the city isn't floating in space. [COMPLETED]
+6. Possibly add roads (even animated textures for mini cars)? [UNASSIGNED]
+7. Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
+8. Create additional textures and user controls [UNASSIGNED]
+9. Add music controls (pause, upload song, etc.) [UNASSIGNED]
 
 Examples
 --------

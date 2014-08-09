@@ -36,7 +36,7 @@ var view_angle = 50,
 	aspect_ratio = w / h,
 	near = 1,
 	far = 1000,
-	mode = "day";
+	mode = "night";
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -52,6 +52,26 @@ camera.position.z = 50;
 // Set renderer size and attach to container div
 renderer.setSize(w, h);
 $("#container").append(renderer.domElement);
+
+/***************************
+ * Create ground, fog, sky *
+ ***************************/
+
+var groundMaterial = (mode == "day") ? new THREE.MeshLambertMaterial({ color: "#338855"}) : 
+	new THREE.MeshLambertMaterial({ color: "#103010"})
+var ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMaterial);
+ground.material.side = THREE.DoubleSide;
+ground.position.set(0, 0, 0);
+ground.rotation.x = Math.PI / 2;
+scene.add(ground);
+
+var skyMaterial = (mode == "day") ? new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide }) :
+	new THREE.MeshBasicMaterial({ color: "#333388", side: THREE.BackSide });
+var skyBox = new THREE.Mesh(new THREE.CubeGeometry(200, 50, 200), skyMaterial);
+skyBox.position.set(0,24.5,0);
+scene.add(skyBox);
+
+scene.fog = (mode == "day") ? new THREE.Fog(0xffffff, 0.015, 150) : new THREE.Fog(0x666666, 0.015, 150);
 
 /****************
  * Create cubes *
@@ -82,11 +102,11 @@ for(var x = -16; x < 16; x += 2) {
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x605550);
+var light = (mode == "day") ? new THREE.AmbientLight(0x605550) : new THREE.AmbientLight(0x605550);
 scene.add(light);
 
 // Add Directional Lights
-var directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+var directionalLight = (mode == "day") ? new THREE.DirectionalLight(0xffffff, 0.7) : new THREE.DirectionalLight(0xffffff, 0.2);
 directionalLight.position.set(3, 1.5, 3);
 scene.add(directionalLight);
 
@@ -101,7 +121,7 @@ controls.addEventListener('change', render);
 
 // I believe this is what sets up the passive rotation, but not quite sure yet.
 for (var i = 0 ; i < 7 ; i++) {
-	controls.pan(new THREE.Vector3(1, 0, 0))
+	// controls.pan(new THREE.Vector3(1, 0, 0))
 	controls.pan(new THREE.Vector3(0, 1, 0));
 }
 

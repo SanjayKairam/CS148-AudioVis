@@ -12,7 +12,7 @@ var createBuilding = function(texMode) {
 	// return new THREE.Mesh(geometry, material);
 	
 	// Base geometry for building
-	var geometry = new THREE.CubeGeometry(1.5, 3, 1.5);
+	var geometry = new THREE.CubeGeometry(1.5, 6, 1.5);
 
 	// Set UV (texture coordinates) for the top face (roof)
 	geometry.faceVertexUvs[0][2][0].set( 0, 0 );
@@ -87,7 +87,7 @@ var generateNightTextureCanvas = function() {
 	for (var y = 4 ; y < 64 ; y += 4) {
 		for (var x = 0 ; x < 32 ; x += 2) {
 			var value = Math.floor(Math.random() * 256);
-			context.fillStyle = 'rgb(' + [value, value, value/4].join(',') + ")";
+			context.fillStyle = 'rgb(' + [value, value, value/3].join(',') + ")";
 			context.fillRect(x, y, 2, 1);
 		}
 	}
