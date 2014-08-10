@@ -25,7 +25,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.userPan = true;
 	this.userPanSpeed = 2.0;
 
-	this.autoRotate = true;
+	this.autoRotate = false;
 	this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
 
 	this.minPolarAngle = 0; // radians
@@ -83,7 +83,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( angle === undefined ) {
 
 			angle = getAutoRotationAngle();
-
+			angle = 10*angle;
 		}
 
 		thetaDelta += angle;
@@ -351,7 +351,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 				scope.pan( new THREE.Vector3( 1, 0, 0 ) );
 				break;
 			case scope.keys.SPACE:
-
+				scope.rotateRight();
 				break;
 		}
 
