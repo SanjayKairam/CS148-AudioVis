@@ -40,7 +40,7 @@ var view_angle = 50,
 	aspect_ratio = w / h,
 	near = 1,
 	far = 1000,
-	mode = "day";
+	mode = "night";
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
