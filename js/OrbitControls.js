@@ -352,7 +352,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 				break;
 			case scope.keys.SPACE:
 				scope.rotateRight();
-				break;
+				break; 
 		}
 
 	}
