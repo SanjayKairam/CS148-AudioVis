@@ -34,7 +34,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.minDistance = 0;
 	this.maxDistance = Infinity;
 
-	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, SPACE: 32 };
+	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, SPACE: 32, W: 87, A: 65, D: 68, X: 88 };
 
 	// internals
 
@@ -71,7 +71,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( angle === undefined ) {
 
 			angle = getAutoRotationAngle();
-
+			angle = 10*angle;
 		}
 
 		thetaDelta -= angle;
@@ -95,6 +95,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( angle === undefined ) {
 
 			angle = getAutoRotationAngle();
+			angle = 10*angle;
 
 		}
 
@@ -107,6 +108,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( angle === undefined ) {
 
 			angle = getAutoRotationAngle();
+			angle = 10*angle;
 
 		}
 
@@ -351,8 +353,20 @@ THREE.OrbitControls = function ( object, domElement ) {
 				scope.pan( new THREE.Vector3( 1, 0, 0 ) );
 				break;
 			case scope.keys.SPACE:
+				//scope.rotateRight();
+				break;
+			case scope.keys.A:
+				scope.rotateLeft();
+				break;
+			case scope.keys.D:
 				scope.rotateRight();
 				break; 
+			case scope.keys.W:
+				scope.rotateUp();
+				break; 
+			case scope.keys.X:
+				scope.rotateDown();
+				break;
 		}
 
 	}
@@ -363,6 +377,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.domElement.addEventListener( 'DOMMouseScroll', onMouseWheel, false ); // firefox
 	this.domElement.addEventListener( 'keydown', onKeyDown, false );
 
+	//window.addEventListener( 'keydown', onKeyDown, false );
 };
 
 THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
