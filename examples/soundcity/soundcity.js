@@ -90,7 +90,7 @@ for(var x = -16; x < 16; x += 2) {
 	for(var y = -16; y < 16; y += 2) {
 
 		cubes[i][j] = createBuilding(mode);
-		cubes[i][j].position = new THREE.Vector3(x, 0, y);
+		cubes[i][j].position = new THREE.Vector3(x*2, 0, y*2);
 		
 		scene.add(cubes[i][j]);
 		j++;
