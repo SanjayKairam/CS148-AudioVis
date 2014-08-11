@@ -1,15 +1,4 @@
 var createBuilding = function(texMode) {
-	// var geometry = new THREE.CubeGeometry(1.5, 1.5, 1.5);
-	
-	// var material = new THREE.MeshPhongMaterial({
-	// 	color: randomFairColor(),
-	// 	ambient: 0x808080,
-	// 	specular: 0xffffff,
-	// 	shininess: 20,
-	// 	reflectivity: 5.5 
-	// });
-	
-	// return new THREE.Mesh(geometry, material);
 	
 	// Base geometry for building
 	var geometry = new THREE.CubeGeometry(1.5, 6, 1.5);
@@ -38,17 +27,8 @@ var createBuilding = function(texMode) {
 }
 
 var generateTextureCanvas = function(mode) {
-	if (mode == "day") {
-		return generateDayTextureCanvas();
-	}
-
-	if (mode == "night") {
-		return generateNightTextureCanvas();
-	}
-
-	else {
-		return generateDayTextureCanvas();
-	}
+	if (mode == "day") return generateDayTextureCanvas();
+	else return generateNightTextureCanvas();
 }
 
 var generateDayTextureCanvas = function() {
