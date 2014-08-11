@@ -38,7 +38,9 @@ var view_angle = 45,
 	far = 1000;
 
 var citySize = 16,				// # buildings in a row and column
-	blockSize = 4;				// # buildings in a block [still to be implemented]
+	blockSize = 4,				// # buildings in a block [still to be implemented]
+	lotSize = 2,
+	roadWidth = 2;
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -108,18 +110,22 @@ var xzCoords = [];
 var dayCubes = new Array();
 var nightCubes = new Array();
 
+var centerOffset = ((citySize * lotSize) + (roadWidth * (citySize/blockSize - 1))) / 2;
+
 for (var i = 0 ; i < citySize ; i += 1) {
 	dayCubes[i] = new Array();
 	nightCubes[i] = new Array();
 	for (var j = 0 ; j < citySize ; j += 1) {
 		xzCoords.push([i, j]);
+		var iPos = (i * lotSize) + (Math.floor(i/4) * roadWidth) - centerOffset;
+		var jPos = (j * lotSize) + (Math.floor(j/4) * roadWidth) - centerOffset;
 
 		dayCubes[i][j] = createBuilding("day");
-		dayCubes[i][j].position = new THREE.Vector3(i * 2 - citySize, 3, j * 2 - citySize);
+		dayCubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
 		scene.add(dayCubes[i][j]);
 
 		nightCubes[i][j] = createBuilding("night");
-		nightCubes[i][j].position = new THREE.Vector3(i * 2 - citySize, -3, j * 2 - citySize);
+		nightCubes[i][j].position = new THREE.Vector3(iPos, -3, jPos);
 		scene.add(nightCubes[i][j]);
 	}
 }
