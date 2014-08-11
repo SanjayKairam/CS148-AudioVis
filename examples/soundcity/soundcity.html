@@ -6,6 +6,7 @@
   	<link href="soundcity.css" rel="stylesheet"/>
   </head>
   <body>
+    <button onclick="stopSound()">Stop the Tunes</button>
   	<div id="container"></div>
   </body>
 
@@ -16,3 +17,11 @@
   <script src="../../js/building.js"></script>
   <script src="soundcity.js"></script>
 </html>
+
+<script>
+  function stopSound() {
+  if (source) {
+    source.stop();
+  }
+}
+</script>
