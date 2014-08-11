@@ -2,7 +2,7 @@ var context;
 var source, sourceJs;
 var analyser;
 var buffer;
-// var url = "../../music/cufool_you_in_my_world_instrumental.ogg";
+//var url = "../../music/cufool_you_in_my_world_instrumental.ogg";
 var url = "../../music/Naked.mp3"
 var array = new Array();
 var boost = 0;
@@ -63,6 +63,7 @@ request.onload = function() {
 		            boost += array[i];
 		        }
 		        boost = boost / array.length;
+		        //console.log(array);
 			};
 			
 			$('#info')

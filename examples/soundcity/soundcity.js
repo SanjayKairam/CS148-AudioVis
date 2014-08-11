@@ -39,7 +39,7 @@ var w = $(window).width(),
 var view_angle = 50,
 	aspect_ratio = w / h,
 	near = 1,
-	far = 1000,
+	far = 10000,
 	mode = "day";
 
 // These 3 lines get repeated a lot!
@@ -69,6 +69,23 @@ ground.position.set(0, 0, 0);
 ground.rotation.x = Math.PI / 2;
 scene.add(ground);
 
+/*
+var groundTex = THREE.ImageUtils.loadTexture('../../images/MetallicAssembly-ColorMap.png');
+groundTex.wrapS = THREE.RepeatWrapping; 
+groundTex.wrapT = THREE.RepeatWrapping; 
+groundTex.repeat.x = 256; 
+groundTex.repeat.y = 256; 
+var groundMat = new THREE.MeshLambertMaterial({map:groundTex});
+var groundGeo = new THREE.PlaneGeometry(400,400); 
+
+var ground = new THREE.Mesh(groundGeo,groundMat);
+ground.rotation.x = Math.PI/2;
+ground.doubleSided = true; 
+ground.material.side = THREE.DoubleSide;
+ground.position.set(0, 0, 0);
+scene.add(ground); 
+*/
+
 var skyMaterial = (mode == "day") ? new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide }) :
 	new THREE.MeshBasicMaterial({ color: "#333388", side: THREE.BackSide });
 var skyBox = new THREE.Mesh(new THREE.CubeGeometry(200, 50, 200), skyMaterial);
@@ -80,9 +97,8 @@ scene.fog = (mode == "day") ? new THREE.Fog(0xffffff, 0.015, 150) : new THREE.Fo
 /****************
  * Create cubes *
  ****************/
-
 var cubes = new Array();
-
+/*
 var i = 0;
 for(var x = -16; x < 16; x += 2) {
 	var j = 0;
@@ -97,6 +113,77 @@ for(var x = -16; x < 16; x += 2) {
 	}
 	i++;
 }
+*/
+/***************
+ * Create a cow *
+ ***************/
+var loadr = new THREE.JSONLoader();
+var cowcallback = function (geometry) {  
+    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+    cow = new THREE.Mesh( geometry, color );
+    cow.scale.x = cow.scale.y = cow.scale.z = 10.0; 
+    cow.position.x = 25;
+    cow.position.y = 6;
+    cow.position.z = 25;
+    scene.add(cow);
+};
+
+loadr.load('../../images/cow.js', cowcallback);
+
+/***************
+ * Create a bunny *
+ ***************/
+ var loadr = new THREE.JSONLoader();
+var bunnycallback = function (geometry) {  
+    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+    bun = new THREE.Mesh( geometry, color );
+    bun.scale.x = bun.scale.y = bun.scale.z = 20.0; 
+    bun.position.x = -25;
+    bun.position.z = 25;
+    bun.position.y = -.8;
+
+    scene.add(bun);
+};
+
+loadr.load('../../images/bunny.js', bunnycallback);
+
+/***************
+ * Create a car *
+ ***************/
+var manager = new THREE.LoadingManager();
+	manager.onProgress = function ( item, loaded, total ) {
+
+		console.log( item, loaded, total );
+
+	};
+
+var car;
+var pivot;
+var parent;
+
+var loader = new THREE.BinaryLoader();
+loader.load('../../images/veyron/VeyronNoUv_bin.js', 
+	function(geometry) { 
+    var red = new THREE.MeshLambertMaterial( { color: 0xd90217, opacity: 1.0, transparent: false } ); 
+    car = new THREE.Mesh( geometry, red );
+    car.scale.x = car.scale.y = car.scale.z = 0.05; 
+    car.position.y = 1.8;
+    car.position.z += 5.5;
+
+    parent = new THREE.Object3D();
+    scene.add(parent);
+
+    pivot = new THREE.Object3D();
+    pivot.rotation.x = 0;
+    parent.add(pivot);   
+    
+    pivot.add(car);
+    
+});
+
+
+
+
 
 /****************
  * Set lighting *
@@ -126,13 +213,12 @@ controls.addEventListener('change', render);
 // I believe this is what sets up the passive rotation, but not quite sure yet.
 for (var i = 0 ; i < 7 ; i++) {
 	// controls.pan(new THREE.Vector3(1, 0, 0))
-	controls.pan(new THREE.Vector3(0, 1, 0));
+	//controls.pan(new THREE.Vector3(0, 1, 0));
 }
 
 /*******************
  * Render Function *
  *******************/
-
 // Render is called on each animation frame and whenever controls are used.
 var render = function () {
 	if (typeof array === 'object' && array.length > 0) {
@@ -150,16 +236,38 @@ var render = function () {
             		var iVal = xArr[i] - 1;
             		var jVal = yArr[i] - 1;
 			// Scale each cube according to "boost", calculated in audio.js
-			var scale = (array[k] + boost) / 75;
-			cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
-			k += (k < array.length ? 1 : 0);
+			
+			// var scale = (array[k] + boost) / 75;
+			// cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
+			
+			// k += (k < array.length ? 1 : 0);
+
 		}
+		
+
+		
+		if (pivot.rotation.x <= Math.PI / 4) {
+			pivot.rotation.x -= .01;
+		}
+		if (pivot.rotation.x < -Math.PI / 4) {
+			pivot.rotation.x = 0;
+		}
+		//console.log('pivot rotation = ' + pivot.rotation.x);
 	}
 
 	// Set render function to next animation frame
 	requestAnimFrame(render);
 	controls.update();
 	renderer.render(scene, camera);
+}
+
+function randomFairColor() {
+	var min = 64;
+	var max = 224;
+	var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;
+	var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
+	var b = (Math.floor(Math.random() * (max - min + 1)) + min);
+	return r + g + b;
 }
 
 // Don't forget to call render! That was a stupid problem to debug.
