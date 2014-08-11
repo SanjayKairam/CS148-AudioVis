@@ -1,24 +1,26 @@
-CS 148: Audio Visualization Project
+# CS 148: Audio Visualization Project
 
-testing testing
+## Overview
 
-Overview
+##Task List
+### Completed
++	Starter project - read in audio and map to grid of blocks arranged in XZ plane [COMPLETED]
++	Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY-- COMPLETED]
++	Generate textures to style blocks like buildings [COMPLETED]
++	Add "ground" and "sky" so the city isn't floating in space. [COMPLETED]
 
---------
-Our current V1 is currently in examples/soundcity. Here's the basic outline for what's been done and a speculative list of what needs to be done.
-1. Starter project - read in audio and map to grid of blocks arranged in XZ plane [COMPLETED]
-2. Reorganize how frequencies are mapped to blocks (center-->out?) [HALEY-- COMPLETED]
-3. Generate textures to style blocks like buildings [COMPLETED]
-4. Clean up camera controls [UNASSIGNED]
-5. Add "ground" and "sky" so the city isn't floating in space. [COMPLETED]
-6. Possibly add roads (even animated textures for mini cars)? [UNASSIGNED]
-7. Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
-8. Create additional textures and user controls [UNASSIGNED]
-9. Add music controls (pause, upload song, etc.) [UNASSIGNED]
+### To Be Done
++	Clean up camera controls [ASSIGNED - HALEY]
++	Add music controls (pause, upload song, etc.) [ASSIGNED - HALEY]
++ 	Spacing buildings into groups to form "city blocks" [ASSIGNED - HALEY]
++	Adding additional models and content [ASSIGNED - BRANDON]
++	Combining day and night scenes [ASSIGNED - SANJAY]
++	Adding textures for roads, etc. [ASSIGNED - SANJAY]
++	Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
++	Create advanced textures, models, user controls, etc. [UNASSIGNED]
 
-Examples
---------
-I'm going through tutorials, and I'm adding examples which I think may be helpful in getting us up and running with respect to various aspects of the project. I'll try and keep an updated list here. 
+## Samples / Tutorials
+The examples folder contains a number of sample projects and tutorials which may be helpful in getting various aspects of the proejct working. Let's update the list as we add to this folder (this will also help with attribution later on).
 
 For simple examples, you can just open the html file in your browser (Chrome may be best) and it should work. For more complicated examples (like those which read in an audio file, for instance), you will need to start a local server. The simplest way is to navigate to the main directory for this project and type "python -m SimpleHTTPServer", which should serve the page at "http://0.0.0.0/8000".
 
