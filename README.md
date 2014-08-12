@@ -9,13 +9,17 @@
 +	Generate textures to style blocks like buildings [COMPLETED]
 +	Add "ground" and "sky" so the city isn't floating in space. [COMPLETED]
 
-### To Be Done
+### Must Do
 +	Clean up camera controls [ASSIGNED - HALEY]
 +	Add music controls (pause, upload song, etc.) [ASSIGNED - HALEY]
 + 	Spacing buildings into groups to form "city blocks" [ASSIGNED - HALEY]
 +	Adding additional models and content [ASSIGNED - BRANDON]
 +	Combining day and night scenes [ASSIGNED - SANJAY]
 +	Adding textures for roads, etc. [ASSIGNED - SANJAY]
++	Remove unused faces from buildings (i.e. floors) [UNASSIGNED]
++	Fix roof texture on night buildigns (currently being rendered as floor) [UNASSIGNED]
+
+### Nice-to-Haves
 +	Experiment with fine-tuning the building motion (add decay, stretching vs. growing, etc.) [UNASSIGNED]
 +	Create advanced textures, models, user controls, etc. [UNASSIGNED]
 
