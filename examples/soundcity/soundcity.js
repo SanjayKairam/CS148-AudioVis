@@ -131,13 +131,13 @@ scene.fog = new THREE.Fog(0xaaaaaa, 0.015, 350);
 /****************
  * Create cubes *
  ****************/
-var cubes = new Array();
-/*
-var i = 0;
-for(var x = -16; x < 16; x += 2) {
-	var j = 0;
-	cubes[i] = new Array();
-	for(var y = -16; y < 16; y += 2) {
+// var cubes = new Array();
+
+// var i = 0;
+// for(var x = -16; x < 16; x += 2) {
+// 	var j = 0;
+// 	cubes[i] = new Array();
+// 	for(var y = -16; y < 16; y += 2) {
 
 //Don't kill me for these arrays--- I couldn't get the algorithm for spiraling to work, so we're doing this.
 // var xArr = [9, 9, 8, 8, 8, 9, 10, 10, 10, 10, 9, 8, 7, 7, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 11, 10, 9, 8, 7, 6, 6, 6, 6, 6, 6, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12, 12, 11, 10, 9, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 2, 2 ,2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
@@ -164,7 +164,31 @@ for (var i = 0 ; i < citySize ; i += 1) {
 		scene.add(nightCubes[i][j]);
 	}
 }
-*/
+/***************
+ * Create a tree *
+ ***************/
+var treeTex = THREE.ImageUtils.loadTexture('../../images/tree_pink.jpg');
+var radius = 75;
+var numTrees = 30;
+ var loader = new THREE.JSONLoader();
+ var tree, treegeo, treeMat;
+ var clones = new Array();
+ var treecallback = function(geometry) {
+ 	treegeo = geometry;
+ 	treeMat = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false, map:treeTex } ); 
+ 	
+	for (var i = 0; i < numTrees; i += 1) {
+		var theta = 2.0 * Math.PI * i / numTrees;
+		clones[i] = new THREE.Mesh(geometry, treeMat);
+		clones[i].position.x = radius * Math.cos(theta);
+		clones[i].position.z = radius * Math.sin(theta);
+		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
+		scene.add(clones[i]);
+	}
+ }
+loader.load('../../images/tree.js', treecallback);
+
+
 /***************
  * Create a cow *
  ***************/
@@ -219,16 +243,17 @@ loader.load('../../images/veyron/VeyronNoUv_bin.js',
     car = new THREE.Mesh( geometry, red );
     car.scale.x = car.scale.y = car.scale.z = 0.05; 
     car.position.y = 1.8;
-    car.position.z += 5.5;
+    car.position.z = 40.5;
+    scene.add(car);
 
-    parent = new THREE.Object3D();
-    scene.add(parent);
+    // parent = new THREE.Object3D();
+    // scene.add(parent);
 
-    pivot = new THREE.Object3D();
-    pivot.rotation.x = 0;
-    parent.add(pivot);   
+    // pivot = new THREE.Object3D();
+    // pivot.rotation.x = 0;
+    // parent.add(pivot);   
     
-    pivot.add(car);
+    // pivot.add(car);
     
 });
 
@@ -284,38 +309,33 @@ for (var i = 0 ; i < 7 ; i++) {
  *******************/
 // Render is called on each animation frame and whenever controls are used.
 var render = function () {
+	//console.log(boost);
 	
-	if (typeof array === 'object' && array.length > 0) {
-		var k = 0;
-		// Iterate through cubes and modify based on audio data.
-		/*for (var i = 0 ; i < cubes.length ; i++) {
-			for (var j = 0 ; j < cubes[i].length ; j++) {
-				// Scale each cube according to "boost", calculated in audio.js
-				var scale = (array[k] + boost) / 30;
-				cubes[i][j].scale.y = (scale < 1 ? 1 : scale);
-				k += (k < array.length ? 1 : 0);
-			}
-		}*/
-		for (var i = 0 ; i < 256; i++) {
-            		var iVal = xArr[i] - 1;
-            		var jVal = yArr[i] - 1;
-			// Scale each cube according to "boost", calculated in audio.js
+	// if (typeof array === 'object' && array.length > 0) {
+	// 	var k = 0;
+	// 	// Iterate through cubes and modify based on audio data.
+	// 	for (var i = 0 ; i < cubes.length ; i++) {
+	// 		for (var j = 0 ; j < cubes[i].length ; j++) {
+	// 			// Scale each cube according to "boost", calculated in audio.js
+	// 			var scale = (array[k] + boost) / 30;
+	// 			cubes[i][j].scale.y = (scale < 1 ? 1 : scale);
+	// 			k += (k < array.length ? 1 : 0);
+	// 		}
+	// 	}
+	// 	for (var i = 0 ; i < 256; i++) {
+ //            		var iVal = xArr[i] - 1;
+ //            		var jVal = yArr[i] - 1;
+	// 		// Scale each cube according to "boost", calculated in audio.js
 			
-			// var scale = (array[k] + boost) / 75;
-			// cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
+	// 		// var scale = (array[k] + boost) / 75;
+	// 		// cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
 			
-			// k += (k < array.length ? 1 : 0);
+	// 		// k += (k < array.length ? 1 : 0);
 
-		}
+	// 	}
 		
 
-		
-		// if (pivot.rotation.x <= Math.PI / 4) {
-		// 	pivot.rotation.x -= .01;
-		// }
-		// if (pivot.rotation.x < -Math.PI / 4) {
-		// 	pivot.rotation.x = 0;
-		// }
+	
 	
 	if (typeof array === "object" && array.length > 0) {
 		// Map buildings to appropriate array items
@@ -334,6 +354,18 @@ var render = function () {
 			nightCubes[xCoord][zCoord].position.y = -3 * nightCubes[xCoord][zCoord].scale.y;
 
 		}
+
+		for (var i = 0; i < numTrees; i += 1) {
+			if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 10.0);
+			else clones[i].scale.y = (scale < 1 ? 10.0 : scale * 7.0);
+		
+		}
+		// if (pivot.rotation.x <= Math.PI / 4) {
+		// 	pivot.rotation.x -= .01;
+		// }
+		// if (pivot.rotation.x < -Math.PI / 4) {
+		// 	pivot.rotation.x = 0;
+		// }
 		//console.log('pivot rotation = ' + pivot.rotation.x);
 	}
 
