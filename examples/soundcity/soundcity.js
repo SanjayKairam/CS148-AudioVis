@@ -52,6 +52,7 @@ scene.add(camera);
 
 // Set camera position
 camera.position.z = 75;
+camera.position.y = 10;
 
 // Set renderer size and attach to container div
 renderer.setSize(w, h);
@@ -61,72 +62,58 @@ $("#container").append(renderer.domElement);
  * Create ground, fog, sky *
  ***************************/
 
-// Ground: Day Side
-var groundGeom1 = new THREE.PlaneGeometry(2000, 2000);
-var groundMat1 = new THREE.MeshLambertMaterial({ color: "#99BB99"});
-var ground1 = new THREE.Mesh(groundGeom1, groundMat1);
-ground1.position.set(0, 0, 0);
-ground1.rotation.x = Math.PI * 3 / 2;
-scene.add(ground1);
-
-// Ground: Night Side
-var groundGeom2 = new THREE.PlaneGeometry(2000, 2000);
-var groundMat2 = new THREE.MeshLambertMaterial({ color: "#994433"});
-var ground2 = new THREE.Mesh(groundGeom2, groundMat2);
-ground2.position.set(0, 0, 0);
-ground2.rotation.x = Math.PI / 2;
-scene.add(ground2);
+// Ground
+var groundGeom = new THREE.PlaneGeometry(110, 110);
+var groundMat = new THREE.MeshLambertMaterial({ color: "#111111"});
+var ground = new THREE.Mesh(groundGeom, groundMat);
+ground.position.set(0, 0, 0);
+ground.rotation.x = Math.PI * 3 / 2;
+scene.add(ground);
 
 // Sky: Day Side
-var skyGeom1 = new THREE.CubeGeometry(2000, 2000, 2000);
-skyGeom1.faces.splice(3, 1);
-var skyMat1 = new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide });
-var sky1 = new THREE.Mesh(skyGeom1, skyMat1);
-sky1.position.set(0, 1000, 0);
-scene.add(sky1);
+var skyGeom = new THREE.CubeGeometry(110, 80, 110);
+skyGeom.faces.splice(3, 1);
 
-// Sky: Night Side
-var skyGeom2 = new THREE.CubeGeometry(2000, 2000, 2000);
-skyGeom2.faces.splice(2, 1);
-var skyMat2 = new THREE.MeshBasicMaterial({ color: "#222255", side: THREE.BackSide });
-var sky2 = new THREE.Mesh(skyGeom2, skyMat2);
-sky2.position.set(0, -1000, 0);
-scene.add(sky2);
+var skyMaterials = [
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#111122", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ 
+		map: THREE.ImageUtils.loadTexture('../../images/clem_full_moon_strtrk.jpg'), 
+		side: THREE.BackSide
+	}),
+];
+var skyMat = new THREE.MeshFaceMaterial(skyMaterials);
+var sky = new THREE.Mesh(skyGeom, skyMat);
+sky.position.set(0, 40, 0);
+scene.add(sky);
 
 // Fog (duh)
-scene.fog = new THREE.Fog(0xaaaaaa, 0.015, 1500);
+// scene.fog = new THREE.Fog(0x333333, 50, 150);
 
 /****************
  * Create cubes *
  ****************/
 
-//Don't kill me for these arrays--- I couldn't get the algorithm for spiraling to work, so we're doing this.
-// var xArr = [9, 9, 8, 8, 8, 9, 10, 10, 10, 10, 9, 8, 7, 7, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 11, 10, 9, 8, 7, 6, 6, 6, 6, 6, 6, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12, 12, 11, 10, 9, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 2, 2 ,2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-// var yArr = [9, 8, 8, 9, 10, 10, 10, 9, 8, 7, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 10, 9, 8, 7, 6, 6, 6, 6, 6, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12, 11, 10, 9, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-
 // Array to sort coordinates in center-out order.
 var xzCoords = [];
 
-var dayCubes = new Array();
-var nightCubes = new Array();
+var cubes = new Array();
 
 var centerOffset = ((citySize * lotSize) + (roadWidth * (citySize/blockSize - 1))) / 2;
 
 for (var i = 0 ; i < citySize ; i += 1) {
-	dayCubes[i] = new Array();
-	nightCubes[i] = new Array();
+	cubes[i] = new Array();
 	for (var j = 0 ; j < citySize ; j += 1) {
 		xzCoords.push([i, j]);
 		var iPos = (i * lotSize) + (Math.floor(i/4) * roadWidth) - centerOffset;
 		var jPos = (j * lotSize) + (Math.floor(j/4) * roadWidth) - centerOffset;
 
-		dayCubes[i][j] = createBuilding("day");
-		dayCubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
-		scene.add(dayCubes[i][j]);
-
-		nightCubes[i][j] = createBuilding("night");
-		nightCubes[i][j].position = new THREE.Vector3(iPos, -3, jPos);
-		scene.add(nightCubes[i][j]);
+		cubes[i][j] = createBuilding("night");
+		cubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
+		scene.add(cubes[i][j]);
 	}
 }
 
@@ -146,7 +133,7 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x605550);
+var light = new THREE.AmbientLight(0x333333);
 scene.add(light);
 
 // Day-side directional light
@@ -183,11 +170,8 @@ var render = function () {
 
 			var scale = (array[arrIdx] + boost) / 80;
 
-			dayCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
-			dayCubes[xCoord][zCoord].position.y = 3 * dayCubes[xCoord][zCoord].scale.y;
-
-			nightCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
-			nightCubes[xCoord][zCoord].position.y = -3 * nightCubes[xCoord][zCoord].scale.y;
+			cubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
+			cubes[xCoord][zCoord].position.y = 3 * cubes[xCoord][zCoord].scale.y;
 		}
 	}
 
