@@ -1,7 +1,7 @@
 var createBuilding = function(texMode) {
 	
 	// Base geometry for building
-	var geometry = new THREE.CubeGeometry(1.5, 6, 1.5);
+	var geometry = new THREE.CubeGeometry(lotSize - gapSize, 6, lotSize - gapSize);
 
 	// Set UV (texture coordinates) for the top face (roof)
 	geometry.faceVertexUvs[0][2][0].set( 0, 0 );

@@ -40,8 +40,14 @@ var view_angle = 45,
 
 var citySize = 32,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
+
 	lotSize = 2,
 	roadWidth = 4;
+
+	// lotSize = 3,
+	 gapSize = 0.5;
+	// roadWidth = 2.5;
+
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -53,6 +59,7 @@ scene.add(camera);
 
 // Set camera position
 camera.position.z = 75;
+camera.position.y = 10;
 
 // Set renderer size and attach to container div
 renderer.setSize(w, h);
@@ -62,73 +69,88 @@ $("#container").append(renderer.domElement);
  * Create ground, fog, sky *
  ***************************/
 
-// var groundMaterial = (mode == "day") ? new THREE.MeshLambertMaterial({ color: "#338855"}) : 
-// 	new THREE.MeshLambertMaterial({ color: "#103010"})
-// var ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMaterial);
+// <<<<<<< HEAD
+// // var groundMaterial = (mode == "day") ? new THREE.MeshLambertMaterial({ color: "#338855"}) : 
+// // 	new THREE.MeshLambertMaterial({ color: "#103010"})
+// // var ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMaterial);
+// // ground.material.side = THREE.DoubleSide;
+// // ground.position.set(0, 0, 0);
+// // ground.rotation.x = Math.PI / 2;
+// // scene.add(ground);
+
+// /*
+// var groundTex = THREE.ImageUtils.loadTexture('../../images/MetallicAssembly-ColorMap.png');
+// groundTex.wrapS = THREE.RepeatWrapping; 
+// groundTex.wrapT = THREE.RepeatWrapping; 
+// groundTex.repeat.x = 256; 
+// groundTex.repeat.y = 256; 
+// var groundMat = new THREE.MeshLambertMaterial({map:groundTex});
+// var groundGeo = new THREE.PlaneGeometry(400,400); 
+
+// var ground = new THREE.Mesh(groundGeo,groundMat);
+// ground.rotation.x = Math.PI/2;
+// ground.doubleSided = true; 
 // ground.material.side = THREE.DoubleSide;
 // ground.position.set(0, 0, 0);
-// ground.rotation.x = Math.PI / 2;
-// scene.add(ground);
+// scene.add(ground); 
+// */
 
-/*
-var groundTex = THREE.ImageUtils.loadTexture('../../images/MetallicAssembly-ColorMap.png');
-groundTex.wrapS = THREE.RepeatWrapping; 
-groundTex.wrapT = THREE.RepeatWrapping; 
-groundTex.repeat.x = 256; 
-groundTex.repeat.y = 256; 
-var groundMat = new THREE.MeshLambertMaterial({map:groundTex});
-var groundGeo = new THREE.PlaneGeometry(400,400); 
+// var skyMaterial = (mode == "day") ? new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide }) :
+// 	new THREE.MeshBasicMaterial({ color: "#333388", side: THREE.BackSide });
+// var skyBox = new THREE.Mesh(new THREE.CubeGeometry(200, 50, 200), skyMaterial);
+// skyBox.position.set(0,24.5,0);
+// scene.add(skyBox);
 
-var ground = new THREE.Mesh(groundGeo,groundMat);
-ground.rotation.x = Math.PI/2;
-ground.doubleSided = true; 
-ground.material.side = THREE.DoubleSide;
+// scene.fog = (mode == "day") ? new THREE.Fog(0xffffff, 0.015, 150) : new THREE.Fog(0x666666, 0.015, 150);
+
+// // Ground: Day Side
+// var groundGeom1 = new THREE.PlaneGeometry(2000, 2000);
+// var groundMat1 = new THREE.MeshLambertMaterial({ color: "#99BB99"});
+// var ground1 = new THREE.Mesh(groundGeom1, groundMat1);
+// ground1.position.set(0, 0, 0);
+// ground1.rotation.x = Math.PI * 3 / 2;
+// scene.add(ground1);
+
+// // Ground: Night Side
+// var groundGeom2 = new THREE.PlaneGeometry(2000, 2000);
+// var groundMat2 = new THREE.MeshLambertMaterial({ color: "#994433"});
+// var ground2 = new THREE.Mesh(groundGeom2, groundMat2);
+// ground2.position.set(0, 0, 0);
+// ground2.rotation.x = Math.PI / 2;
+// scene.add(ground2);
+// =======
+// Ground
+var groundGeom = new THREE.PlaneGeometry(110, 110);
+var groundMat = new THREE.MeshLambertMaterial({ color: "#000000"});
+var ground = new THREE.Mesh(groundGeom, groundMat);
 ground.position.set(0, 0, 0);
-scene.add(ground); 
-*/
-
-var skyMaterial = (mode == "day") ? new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide }) :
-	new THREE.MeshBasicMaterial({ color: "#333388", side: THREE.BackSide });
-var skyBox = new THREE.Mesh(new THREE.CubeGeometry(200, 50, 200), skyMaterial);
-skyBox.position.set(0,24.5,0);
-scene.add(skyBox);
-
-scene.fog = (mode == "day") ? new THREE.Fog(0xffffff, 0.015, 150) : new THREE.Fog(0x666666, 0.015, 150);
-
-// Ground: Day Side
-var groundGeom1 = new THREE.PlaneGeometry(2000, 2000);
-var groundMat1 = new THREE.MeshLambertMaterial({ color: "#99BB99"});
-var ground1 = new THREE.Mesh(groundGeom1, groundMat1);
-ground1.position.set(0, 0, 0);
-ground1.rotation.x = Math.PI * 3 / 2;
-scene.add(ground1);
-
-// Ground: Night Side
-var groundGeom2 = new THREE.PlaneGeometry(2000, 2000);
-var groundMat2 = new THREE.MeshLambertMaterial({ color: "#994433"});
-var ground2 = new THREE.Mesh(groundGeom2, groundMat2);
-ground2.position.set(0, 0, 0);
-ground2.rotation.x = Math.PI / 2;
-scene.add(ground2);
+ground.rotation.x = Math.PI * 3 / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+// >>>>>>> 72772ce271a5bc4f2dc88d82a942ed1ea934b965
 
 // Sky: Day Side
-var skyGeom1 = new THREE.CubeGeometry(2000, 2000, 2000);
-skyGeom1.faces.splice(3, 1);
-var skyMat1 = new THREE.MeshBasicMaterial({ color: "#0099ee", side: THREE.BackSide });
-var sky1 = new THREE.Mesh(skyGeom1, skyMat1);
-sky1.position.set(0, 1000, 0);
-scene.add(sky1);
+var skyGeom = new THREE.CubeGeometry(110, 80, 110);
+skyGeom.faces.splice(3, 1);
 
-// Sky: Night Side
-var skyGeom2 = new THREE.CubeGeometry(2000, 2000, 2000);
-skyGeom2.faces.splice(2, 1);
-var skyMat2 = new THREE.MeshBasicMaterial({ color: "#222255", side: THREE.BackSide });
-var sky2 = new THREE.Mesh(skyGeom2, skyMat2);
-sky2.position.set(0, -1000, 0);
-scene.add(sky2);
+var skyMaterials = [
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#111122", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ 
+		map: THREE.ImageUtils.loadTexture('../../images/clem_full_moon_strtrk.jpg'), 
+		side: THREE.BackSide
+	}),
+];
+var skyMat = new THREE.MeshFaceMaterial(skyMaterials);
+var sky = new THREE.Mesh(skyGeom, skyMat);
+sky.position.set(0, 40, 0);
+scene.add(sky);
 
 // Fog (duh)
-scene.fog = new THREE.Fog(0xaaaaaa, 0.015, 1500);
+// scene.fog = new THREE.Fog(0x333333, 50, 150);
 
 /****************
  * Create cubes *
@@ -141,61 +163,53 @@ scene.fog = new THREE.Fog(0xaaaaaa, 0.015, 1500);
 // 	cubes[i] = new Array();
 // 	for(var y = -16; y < 16; y += 2) {
 
-//Don't kill me for these arrays--- I couldn't get the algorithm for spiraling to work, so we're doing this.
-// var xArr = [9, 9, 8, 8, 8, 9, 10, 10, 10, 10, 9, 8, 7, 7, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 11, 10, 9, 8, 7, 6, 6, 6, 6, 6, 6, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12, 12, 11, 10, 9, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 2, 2 ,2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-// var yArr = [9, 8, 8, 9, 10, 10, 10, 9, 8, 7, 7, 7, 7, 8, 9, 10, 11, 11, 11, 11, 11, 10, 9, 8, 7, 6, 6, 6, 6, 6, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12, 11, 10, 9, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-
 // Array to sort coordinates in center-out order.
 var xzCoords = [];
 
-var dayCubes = new Array();
-var nightCubes = new Array();
+var cubes = new Array();
 
 var centerOffset = ((citySize * lotSize) + (roadWidth * (citySize/blockSize - 1))) / 2;
 
 for (var i = 0 ; i < citySize ; i += 1) {
-	dayCubes[i] = new Array();
-	nightCubes[i] = new Array();
+	cubes[i] = new Array();
 	for (var j = 0 ; j < citySize ; j += 1) {
 		xzCoords.push([i, j]);
 		var iPos = (i * lotSize) + (Math.floor(i/4) * roadWidth) - centerOffset;
 		var jPos = (j * lotSize) + (Math.floor(j/4) * roadWidth) - centerOffset;
 
-		dayCubes[i][j] = createBuilding("day");
-		dayCubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
-		scene.add(dayCubes[i][j]);
-
-		nightCubes[i][j] = createBuilding("night");
-		nightCubes[i][j].position = new THREE.Vector3(iPos, -3, jPos);
-		scene.add(nightCubes[i][j]);
+		cubes[i][j] = createBuilding("night");
+		cubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
+		cubes[i][j].castShadow = true;
+		cubes[i][j].receiveShadow = true;
+		scene.add(cubes[i][j]);
 	}
 }
 /***************
  * Create a tree *
  ***************/
 var treeTex = THREE.ImageUtils.loadTexture('../../images/tree_pink.jpg');
-var radius = 90;
-var numTrees = 76;
-var tree_gap = 20;
+var radius = 50;
+var numTrees = 34;
+var tree_gap = 12.5;
 var loader = new THREE.JSONLoader();
 var tree, treegeo, treeMat;
 var clones = [];
 var treecallback = function(geometry) {
 	treegeo = geometry;
-	treeMat = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false, map:treeTex } ); 
+	treeMat = new THREE.MeshLambertMaterial( {map:treeTex} ); 
 	var x_pos = -1 * radius;
 	var z_pos = x_pos;
-	for (var i = 0; i < (numTrees / 2); i += 1) {
+	for (var i = 0; i < numTrees; i += 1) {
 		clones[i] = new THREE.Mesh(geometry, treeMat); 
-		if (i == 10) {
+		if (i == 9) {
 			z_pos = radius;
 			x_pos = -1 * radius;
 		}
-		if (i == 20) {
+		if (i == 18) {
 			x_pos = -1 * radius;
 			z_pos = -1 * radius + tree_gap;
 		}
-		if (i == 29) {
+		if (i == 26) {
 			x_pos = radius;
 			z_pos = -1 * radius;
 		}
@@ -205,10 +219,11 @@ var treecallback = function(geometry) {
 		// var theta = 2.0 * Math.PI * i / numTrees;
 		// clones[i].position.x = radius * Math.cos(theta);
 		// clones[i].position.z = radius * Math.sin(theta);
-		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 15.0;
+		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
 		scene.add(clones[i]);
 
 		/* trees on night side */
+		/*
 		var ni = i + (numTrees / 2);
 		clones[ni] = new THREE.Mesh(geometry, treeMat);
 		clones[ni].position.x = x_pos;
@@ -216,9 +231,10 @@ var treecallback = function(geometry) {
 		clones[ni].scale.x = clones[ni].scale.z = 15.0;
 		clones[ni].scale.y = -15.0;
 		scene.add(clones[ni]);
+		*/
 
-		if (i < 20) x_pos += tree_gap;
-		if (i >= 20) z_pos += tree_gap;
+		if (i < 18) x_pos += tree_gap;
+		if (i >= 19) z_pos += tree_gap;
 	}
 
 }
@@ -228,35 +244,25 @@ loader.load('../../images/tree.js', treecallback);
  * Create cars *
  ************/
 var cars = [];
-var car;
-// for (var i = 0; i < 4; i += 1) {
-// 	var car = createCar();
-// 	cars[i] = car;
-// 	cars[i].visibility = true;
-// 	cars[i].position.z = centerOffset - (i * roadWidth);
-// 	cars[i].position.x = 0;
-// 	cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.01; 
-//     cars[i].position.y = 0.5;
-// 	scene.add(cars[i]);
-// }
 var step = 6;
 var numCars = 14;
 var loader = new THREE.BinaryLoader();
 loader.load('../../images/veyron/VeyronNoUv_bin.js', 
 	function(geometry) { 
 	for (var i = 0; i < (numCars / 2); i += 1) {
-	    var color = new THREE.MeshLambertMaterial( { color: rainbow(4, i), opacity: 1.0, transparent: false } ); 
-//	    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+	    var color = new THREE.MeshLambertMaterial( { color: rainbow((numCars / 2), i) } ); 
+	    //var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
 	    cars[i] = new THREE.Mesh( geometry, color );
 	    cars[i].position.z = -50.0;
-		cars[i].visibility = false;
-		var slot = (0 - lotSize - step * 3 * lotSize) + (6 * i * lotSize);
+		cars[i].visibility = true;
+		var slot = (0 - lotSize - step * 3 * lotSize) + (6 * i * lotSize) + (gapSize * 2);
 		cars[i].position.x = slot;
 		cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.015; 
 	    cars[i].position.y = 0.6;
 		scene.add(cars[i]);
 
 		/* cars on night side */
+		/*
 		cars[i + (numCars / 2)] = new THREE.Mesh(geometry, color);
 	    cars[i + (numCars / 2)].position.z = -50.0;
 		cars[i + (numCars / 2)].visibility = false;
@@ -265,7 +271,7 @@ loader.load('../../images/veyron/VeyronNoUv_bin.js',
 	    cars[i + (numCars / 2)].position.y = -0.6;
 	    cars[i + (numCars / 2)].scale.y = -0.015;
 		scene.add(cars[i + (numCars / 2)]);
-
+		*/
 	}
 });
 
@@ -321,18 +327,29 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x605550);
+var light = new THREE.AmbientLight(0x555555);
 scene.add(light);
 
-// Day-side directional light
-var dLight = new THREE.DirectionalLight(0xffffdd, 0.8);
-dLight.position.set(30, 30, 30);
-scene.add(dLight);
+renderer.shadowMapEnabled = true;
+renderer.shadowMapSoft = true;
 
-// Night-side directional light
-dLight = new THREE.DirectionalLight(0xffddff, 0.4);
-dLight.position.set(30, -30, 30);
-scene.add(dLight);
+// Moon Light?
+var moonlight = new THREE.SpotLight(0xffffff, 1.0);
+moonlight.position.set(5, 40, -55);
+moonlight.castShadow = true;
+moonlight.shadowDarkness = 0.5;
+scene.add(moonlight);
+
+
+// // Day-side directional light
+// var dLight = new THREE.DirectionalLight(0xffffdd, 0.8);
+// dLight.position.set(30, 30, 30);
+// scene.add(dLight);
+
+// // Night-side directional light
+// dLight = new THREE.DirectionalLight(0xffddff, 0.4);
+// dLight.position.set(30, -30, 30);
+// scene.add(dLight);
 
 /****************
  * Set Controls *
@@ -363,17 +380,20 @@ var render = function () {
 
 			var scale = (array[arrIdx] + boost) / 80;
 
-			dayCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
-			dayCubes[xCoord][zCoord].position.y = 3 * dayCubes[xCoord][zCoord].scale.y;
+			cubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
+			cubes[xCoord][zCoord].position.y = 3 * cubes[xCoord][zCoord].scale.y;
 
-			nightCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
-			nightCubes[xCoord][zCoord].position.y = -3 * nightCubes[xCoord][zCoord].scale.y;
+			// dayCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
+			// dayCubes[xCoord][zCoord].position.y = 3 * dayCubes[xCoord][zCoord].scale.y;
+
+			// nightCubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
+			// nightCubes[xCoord][zCoord].position.y = -3 * nightCubes[xCoord][zCoord].scale.y;
 
 		}
-		
+
 		for (var i = 0; i < cars.length; i += 1) {
 			if ((boost / i) > i * 1.5 ){
-				cars[i].z = -50;
+				cars[i].z = -50.0;
 				cars[i].visibility = true;
 			}
 			if (cars[i].position.z <= 50.0) {
@@ -384,15 +404,20 @@ var render = function () {
 			}
 		}
 
-
-		for (var i = 0; i < (numTrees / 2); i += 1) {
-			if (i % 2) clones[i].scale.y = (scale < 1 ? 15.0 : scale * 12.0);
-			else clones[i].scale.y = (scale < 1 ? 15.0 : scale * 12.0);
+		/***** bouncing day trees */
+		
+		for (var i = 0; i < numTrees; i += 1) {
+			if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 12.0);
+			else clones[i].scale.y = (scale < 1 ? 12.0 : scale * 10.0);
 		}
+		/***** bouncing night trees */
+		/*
 		for (var i = (numTrees / 2); i < numTrees; i += 1) {
 			if (i % 2) clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
 			else clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
+
 		}
+		*/
 	}
 
 	// Set render function to next animation frame
