@@ -35,13 +35,13 @@ var w = $(window).width(),
 var view_angle = 45,
 	aspect_ratio = w / h,
 	near = 1,
-	//mode = "day";
+	mode = "day";
 	far = 3000;
 
-var citySize = 16,				// # buildings in a row and column
+var citySize = 32,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
 	lotSize = 2,
-	roadWidth = 2;
+	roadWidth = 4;
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -174,96 +174,134 @@ for (var i = 0 ; i < citySize ; i += 1) {
  * Create a tree *
  ***************/
 var treeTex = THREE.ImageUtils.loadTexture('../../images/tree_pink.jpg');
-var radius = 75;
-var numTrees = 30;
- var loader = new THREE.JSONLoader();
- var tree, treegeo, treeMat;
- var clones = new Array();
- var treecallback = function(geometry) {
- 	treegeo = geometry;
- 	treeMat = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false, map:treeTex } ); 
- 	
-	for (var i = 0; i < numTrees; i += 1) {
-		var theta = 2.0 * Math.PI * i / numTrees;
-		clones[i] = new THREE.Mesh(geometry, treeMat);
-		clones[i].position.x = radius * Math.cos(theta);
-		clones[i].position.z = radius * Math.sin(theta);
-		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
+var radius = 90;
+var numTrees = 76;
+var tree_gap = 20;
+var loader = new THREE.JSONLoader();
+var tree, treegeo, treeMat;
+var clones = [];
+var treecallback = function(geometry) {
+	treegeo = geometry;
+	treeMat = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false, map:treeTex } ); 
+	var x_pos = -1 * radius;
+	var z_pos = x_pos;
+	for (var i = 0; i < (numTrees / 2); i += 1) {
+		clones[i] = new THREE.Mesh(geometry, treeMat); 
+		if (i == 10) {
+			z_pos = radius;
+			x_pos = -1 * radius;
+		}
+		if (i == 20) {
+			x_pos = -1 * radius;
+			z_pos = -1 * radius + tree_gap;
+		}
+		if (i == 29) {
+			x_pos = radius;
+			z_pos = -1 * radius;
+		}
+		clones[i].position.x = x_pos;
+		clones[i].position.z = z_pos;
+
+		// var theta = 2.0 * Math.PI * i / numTrees;
+		// clones[i].position.x = radius * Math.cos(theta);
+		// clones[i].position.z = radius * Math.sin(theta);
+		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 15.0;
 		scene.add(clones[i]);
+
+		/* trees on night side */
+		var ni = i + (numTrees / 2);
+		clones[ni] = new THREE.Mesh(geometry, treeMat);
+		clones[ni].position.x = x_pos;
+		clones[ni].position.z = z_pos;
+		clones[ni].scale.x = clones[ni].scale.z = 15.0;
+		clones[ni].scale.y = -15.0;
+		scene.add(clones[ni]);
+
+		if (i < 20) x_pos += tree_gap;
+		if (i >= 20) z_pos += tree_gap;
 	}
- }
+
+}
 loader.load('../../images/tree.js', treecallback);
+
+/************
+ * Create cars *
+ ************/
+var cars = [];
+var car;
+// for (var i = 0; i < 4; i += 1) {
+// 	var car = createCar();
+// 	cars[i] = car;
+// 	cars[i].visibility = true;
+// 	cars[i].position.z = centerOffset - (i * roadWidth);
+// 	cars[i].position.x = 0;
+// 	cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.01; 
+//     cars[i].position.y = 0.5;
+// 	scene.add(cars[i]);
+// }
+var step = 6;
+var numCars = 14;
+var loader = new THREE.BinaryLoader();
+loader.load('../../images/veyron/VeyronNoUv_bin.js', 
+	function(geometry) { 
+	for (var i = 0; i < (numCars / 2); i += 1) {
+	    var color = new THREE.MeshLambertMaterial( { color: rainbow(4, i), opacity: 1.0, transparent: false } ); 
+//	    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+	    cars[i] = new THREE.Mesh( geometry, color );
+	    cars[i].position.z = -50.0;
+		cars[i].visibility = false;
+		var slot = (0 - lotSize - step * 3 * lotSize) + (6 * i * lotSize);
+		cars[i].position.x = slot;
+		cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.015; 
+	    cars[i].position.y = 0.6;
+		scene.add(cars[i]);
+
+		/* cars on night side */
+		cars[i + (numCars / 2)] = new THREE.Mesh(geometry, color);
+	    cars[i + (numCars / 2)].position.z = -50.0;
+		cars[i + (numCars / 2)].visibility = false;
+		cars[i + (numCars / 2)].position.x = slot;
+		cars[i + (numCars / 2)].scale.x = cars[i + (numCars / 2)].scale.z = 0.015; 
+	    cars[i + (numCars / 2)].position.y = -0.6;
+	    cars[i + (numCars / 2)].scale.y = -0.015;
+		scene.add(cars[i + (numCars / 2)]);
+
+	}
+});
 
 
 /***************
  * Create a cow *
  ***************/
-var loadr = new THREE.JSONLoader();
-var cowcallback = function (geometry) {  
-    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
-    cow = new THREE.Mesh( geometry, color );
-    cow.scale.x = cow.scale.y = cow.scale.z = 10.0; 
-    cow.position.x = 25;
-    cow.position.y = 6;
-    cow.position.z = 25;
-    scene.add(cow);
-};
+// var loadr = new THREE.JSONLoader();
+// var cowcallback = function (geometry) {  
+//     var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+//     cow = new THREE.Mesh( geometry, color );
+//     cow.scale.x = cow.scale.y = cow.scale.z = 10.0; 
+//     cow.position.x = 25;
+//     cow.position.y = 6;
+//     cow.position.z = 25;
+//     scene.add(cow);
+// };
 
-loadr.load('../../images/cow.js', cowcallback);
+// loadr.load('../../images/cow.js', cowcallback);
 
 /***************
  * Create a bunny *
  ***************/
- var loadr = new THREE.JSONLoader();
-var bunnycallback = function (geometry) {  
-    var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
-    bun = new THREE.Mesh( geometry, color );
-    bun.scale.x = bun.scale.y = bun.scale.z = 20.0; 
-    bun.position.x = -25;
-    bun.position.z = 25;
-    bun.position.y = -.8;
+// var loadr = new THREE.JSONLoader();
+// var bunnycallback = function (geometry) {  
+//     var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+//     bun = new THREE.Mesh( geometry, color );
+//     bun.scale.x = bun.scale.y = bun.scale.z = 20.0; 
+//     bun.position.x = -25;
+//     bun.position.z = 25;
+//     bun.position.y = -.8;
 
-    scene.add(bun);
-};
+//     scene.add(bun);
+// };
 
-loadr.load('../../images/bunny.js', bunnycallback);
-
-/***************
- * Create a car *
- ***************/
-var manager = new THREE.LoadingManager();
-	manager.onProgress = function ( item, loaded, total ) {
-
-		console.log( item, loaded, total );
-
-	};
-
-var car;
-var pivot;
-var parent;
-
-var loader = new THREE.BinaryLoader();
-loader.load('../../images/veyron/VeyronNoUv_bin.js', 
-	function(geometry) { 
-    var red = new THREE.MeshLambertMaterial( { color: 0xd90217, opacity: 1.0, transparent: false } ); 
-    car = new THREE.Mesh( geometry, red );
-    car.scale.x = car.scale.y = car.scale.z = 0.05; 
-    car.position.y = 1.8;
-    car.position.z = 40.5;
-    scene.add(car);
-
-    // parent = new THREE.Object3D();
-    // scene.add(parent);
-
-    // pivot = new THREE.Object3D();
-    // pivot.rotation.x = 0;
-    // parent.add(pivot);   
-    
-    // pivot.add(car);
-    
-});
-
-
+// loadr.load('../../images/bunny.js', bunnycallback);
 
 
 
@@ -315,34 +353,6 @@ for (var i = 0 ; i < 7 ; i++) {
  *******************/
 // Render is called on each animation frame and whenever controls are used.
 var render = function () {
-	//console.log(boost);
-	
-	// if (typeof array === 'object' && array.length > 0) {
-	// 	var k = 0;
-	// 	// Iterate through cubes and modify based on audio data.
-	// 	for (var i = 0 ; i < cubes.length ; i++) {
-	// 		for (var j = 0 ; j < cubes[i].length ; j++) {
-	// 			// Scale each cube according to "boost", calculated in audio.js
-	// 			var scale = (array[k] + boost) / 30;
-	// 			cubes[i][j].scale.y = (scale < 1 ? 1 : scale);
-	// 			k += (k < array.length ? 1 : 0);
-	// 		}
-	// 	}
-	// 	for (var i = 0 ; i < 256; i++) {
- //            		var iVal = xArr[i] - 1;
- //            		var jVal = yArr[i] - 1;
-	// 		// Scale each cube according to "boost", calculated in audio.js
-			
-	// 		// var scale = (array[k] + boost) / 75;
-	// 		// cubes[iVal][jVal].scale.y = (scale < 1 ? 1 : scale);
-			
-	// 		// k += (k < array.length ? 1 : 0);
-
-	// 	}
-		
-
-	
-	
 	if (typeof array === "object" && array.length > 0) {
 		// Map buildings to appropriate array items
 		for (var i = 0 ; i < (citySize * citySize) ; i++) {
@@ -360,19 +370,29 @@ var render = function () {
 			nightCubes[xCoord][zCoord].position.y = -3 * nightCubes[xCoord][zCoord].scale.y;
 
 		}
-
-		for (var i = 0; i < numTrees; i += 1) {
-			if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 10.0);
-			else clones[i].scale.y = (scale < 1 ? 10.0 : scale * 7.0);
 		
+		for (var i = 0; i < cars.length; i += 1) {
+			if ((boost / i) > i * 1.5 ){
+				cars[i].z = -50;
+				cars[i].visibility = true;
+			}
+			if (cars[i].position.z <= 50.0) {
+				cars[i].position.z += boost / (100 + (i * 10));	
+			} else {
+				cars[i].position.z = -50.0;
+				cars[i].visibility = false;
+			}
 		}
-		// if (pivot.rotation.x <= Math.PI / 4) {
-		// 	pivot.rotation.x -= .01;
-		// }
-		// if (pivot.rotation.x < -Math.PI / 4) {
-		// 	pivot.rotation.x = 0;
-		// }
-		//console.log('pivot rotation = ' + pivot.rotation.x);
+
+
+		for (var i = 0; i < (numTrees / 2); i += 1) {
+			if (i % 2) clones[i].scale.y = (scale < 1 ? 15.0 : scale * 12.0);
+			else clones[i].scale.y = (scale < 1 ? 15.0 : scale * 12.0);
+		}
+		for (var i = (numTrees / 2); i < numTrees; i += 1) {
+			if (i % 2) clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
+			else clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
+		}
 	}
 
 	// Set render function to next animation frame
@@ -388,6 +408,25 @@ function randomFairColor() {
 	var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
 	var b = (Math.floor(Math.random() * (max - min + 1)) + min);
 	return r + g + b;
+}
+
+function rainbow(numOfSteps, step) {
+// HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+    var r, g, b;
+    var h = step / numOfSteps;
+    var i = ~~(h * 6);
+    var f = h * 6 - i;
+    var q = 1 - f;
+    switch(i % 6){
+        case 0: r = 1, g = f, b = 0; break;
+        case 1: r = q, g = 1, b = 0; break;
+        case 2: r = 0, g = 1, b = f; break;
+        case 3: r = 0, g = q, b = 1; break;
+        case 4: r = f, g = 0, b = 1; break;
+        case 5: r = 1, g = 0, b = q; break;
+    }
+    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+    return (c);
 }
 
 // Don't forget to call render! That was a stupid problem to debug.
