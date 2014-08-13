@@ -39,8 +39,9 @@ var view_angle = 45,
 
 var citySize = 16,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
-	lotSize = 2,
-	roadWidth = 2;
+	lotSize = 3,
+	gapSize = 0.5,
+	roadWidth = 2.5;
 
 // These 3 lines get repeated a lot!
 var renderer = new THREE.WebGLRenderer();
@@ -64,10 +65,11 @@ $("#container").append(renderer.domElement);
 
 // Ground
 var groundGeom = new THREE.PlaneGeometry(110, 110);
-var groundMat = new THREE.MeshLambertMaterial({ color: "#111111"});
+var groundMat = new THREE.MeshLambertMaterial({ color: "#000000"});
 var ground = new THREE.Mesh(groundGeom, groundMat);
 ground.position.set(0, 0, 0);
 ground.rotation.x = Math.PI * 3 / 2;
+ground.receiveShadow = true;
 scene.add(ground);
 
 // Sky: Day Side
@@ -113,6 +115,8 @@ for (var i = 0 ; i < citySize ; i += 1) {
 
 		cubes[i][j] = createBuilding("night");
 		cubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
+		cubes[i][j].castShadow = true;
+		cubes[i][j].receiveShadow = true;
 		scene.add(cubes[i][j]);
 	}
 }
@@ -133,18 +137,29 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x333333);
+var light = new THREE.AmbientLight(0x555555);
 scene.add(light);
 
-// Day-side directional light
-var dLight = new THREE.DirectionalLight(0xffffdd, 0.8);
-dLight.position.set(30, 30, 30);
-scene.add(dLight);
+renderer.shadowMapEnabled = true;
+renderer.shadowMapSoft = true;
 
-// Night-side directional light
-dLight = new THREE.DirectionalLight(0xffddff, 0.4);
-dLight.position.set(30, -30, 30);
-scene.add(dLight);
+// Moon Light?
+var moonlight = new THREE.SpotLight(0xffffff, 1.0);
+moonlight.position.set(5, 40, -55);
+moonlight.castShadow = true;
+moonlight.shadowDarkness = 0.5;
+scene.add(moonlight);
+
+
+// // Day-side directional light
+// var dLight = new THREE.DirectionalLight(0xffffdd, 0.8);
+// dLight.position.set(30, 30, 30);
+// scene.add(dLight);
+
+// // Night-side directional light
+// dLight = new THREE.DirectionalLight(0xffddff, 0.4);
+// dLight.position.set(30, -30, 30);
+// scene.add(dLight);
 
 /****************
  * Set Controls *
