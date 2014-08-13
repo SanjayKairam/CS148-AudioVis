@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- <link rel="stylesheet" type="text/css" href="lib/css/style.css">
+<link rel="stylesheet" type="text/css" href="lib/css/overcast/jquery-ui.min.css"> -->
+<title>HTML5 Spatial Frequency Filtering using 2D-FFT</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="spectral.css">
+</head>
+
+  <body>
+    <div class="wrap"><img src="../../images/lena_gray.jpg" width="256" height="256">
+      <canvas id="Spectrum" width="256" height="256"></canvas>
+      <canvas id="Result" width="256" height="256"></canvas>
+    </div>
+    <div>
+      <label>Filter Type: </label>
+      <div id="Filter">
+        <input type="radio" id="HPF" name="filter" value="HPF" checked="checked"/>
+        <label for="HPF">Highpass</label>
+        <input type="radio" id="LPF" name="filter" value="LPF"/>
+        <label for="LPF">Lowpass</label>
+      </div>
+      <label>Filter Radius: </label>
+      <div id="Slider"></div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+    <script src="../../js/fft.js"></script>
+    <script src="spectral.js"></script>
+  </body>
+</html>
