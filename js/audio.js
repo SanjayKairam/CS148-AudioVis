@@ -62,11 +62,6 @@ $('#Slider').slider({
 	}
 });
 
-function updateAudio(sliderValue) {
-	filter.frequency.value= sliderValue;
-	//TODO: FIND OUT HOW TO UPDATE AUDIO WITH THIS NEW FILTER VALUE
-}
-
 request.onload = function() {
 	context.decodeAudioData(
 		request.response,
@@ -95,6 +90,9 @@ request.onload = function() {
 			
 			source.connect(analyser);
 			analyser.connect(sourceJs);
+
+			this.source = source;
+			this.filter = filter;
 			//source.connect(context.destination);
 			
 			sourceJs.onaudioprocess = function(e) {
@@ -152,6 +150,13 @@ function play() {
 	source.start(0);
 	//source.noteOn(0);
 }
+
+function updateAudio(sliderValue) {
+	this.filter.frequency.value= sliderValue;
+	//source.connect(filter);
+	//filter.connect(context.destination);
+}
+
 
 $(window).resize(function() {
 	if($('#play').length === 1) {
