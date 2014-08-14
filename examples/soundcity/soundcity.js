@@ -7,34 +7,6 @@
  *  http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
  */
 
-/*
- * Interface Control Setup
- */
-
-var sliderValue;
-
-$("#controls")
-	.on("click", function (e) { e.stopPropagation(); })
-	.on("mousemove", function (e) { e.stopPropagation(); });
-
-$('#Slider').slider({
-	step: 1, 
-	min: 0, 
-	max: 128,
-	start: function (e, ui) {
-		e.stopPropagation();
-	},
-	slide: function (e, ui) {
-		e.stopPropagation();
-	},
-	change: function(e, ui) {
-		e.stopPropagation();
-		console.log(ui.value);
-		sliderValue = $('#Slider').slider('option', 'value')
-		//apply($('input[name=filter]:checked').val());
-	}
-});
-
 /*******************
  * Animating Stuff *
  *******************/
