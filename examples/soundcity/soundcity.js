@@ -135,11 +135,18 @@ skyGeom.faces.splice(3, 1);
 var moonCanvas = document.createElement("canvas");
 moonCanvas.width = 1100;
 moonCanvas.height = 800;
+
 var moonContext = moonCanvas.getContext("2d");
 
 var moonImage = new Image();
 moonImage.src = '../../images/clem_full_moon_strtrk.jpg';
-//moonContext.putImageData(moonImage, 0, 0);
+moonContext.drawImage(moonImage, 0, 0);
+
+var imgData = moonContext.getImageData(0, 0, 1100, 800);
+moonContext.putImageData(imgData,0,0);
+
+var moonTexture = new THREE.Texture(moonCanvas);
+moonTexture.needsUpdate = true;
 
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
@@ -148,7 +155,8 @@ var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ 
-		map: THREE.ImageUtils.loadTexture('../../images/clem_full_moon_strtrk.jpg'), 
+		map: moonTexture,
+		// map: THREE.ImageUtils.loadTexture('../../images/clem_full_moon_strtrk.jpg'), 
 		side: THREE.BackSide
 	}),
 ];
@@ -398,6 +406,25 @@ var render = function () {
 		}
 		*/
 	}
+
+	// Update moon texture
+	moonContext.drawImage(moonImage, 0, 0);
+
+	imgData = moonContext.getImageData(0, 0, 1100, 800);
+	if (boost > 50) {
+		for (var i=0;i<imgData.data.length;i+=4)
+		  {
+		  imgData.data[i]=255-imgData.data[i];
+		  imgData.data[i+1]=255-imgData.data[i+1];
+		  imgData.data[i+2]=255-imgData.data[i+2];
+		  imgData.data[i+3]=255;
+		  }
+	}
+	moonContext.putImageData(imgData,0,0);
+	moonTexture = new THREE.Texture(moonCanvas);
+	moonTexture.needsUpdate = true;
+
+	sky.material.materials[5].map = moonTexture;
 
 	// Set render function to next animation frame
 	requestAnimFrame(render);
