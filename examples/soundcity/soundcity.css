@@ -90,6 +90,30 @@ canvas{
 	padding: 5px;
 }
 
-#slider {
-	width: 200px;
+/* From Spectral.css */
+
+h1 {
+  /*font-family:"Century",serif;*/
+  border-left:4px solid #00aa66;
+  padding-left:8px;
+}
+
+a {
+  color:#00aa66;
+}
+
+#Filter {
+  margin:10px 0 10px 10px;
+}
+
+#Filter .ui-state-default {
+  color:#666666;
+}
+
+#Filter .ui-state-hover {
+  color:#333333;
+}
+
+#Filter .ui-state-active {
+  color:#111111;
 }

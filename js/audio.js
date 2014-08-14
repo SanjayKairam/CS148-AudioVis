@@ -59,6 +59,7 @@ $('#Slider').slider({
 		sliderValue = $('#Slider').slider('option', 'value')
 		//apply($('input[name=filter]:checked').val());
 		updateAudio(sliderValue);
+		updateMoonTexture(sliderValue);
 	}
 });
 

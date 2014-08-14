@@ -9,11 +9,23 @@
   <body>
     <div id="controls">
       <button onclick="stopSound()">Stop the Tunes</button>
-      <div id="Slider"></div>
-      <div></div>
+      <div>
+        <label>Filter Type: </label>
+        <div id="Filter">
+          <input type="radio" id="HPF" name="filter" value="HPF" checked="checked"/>
+          <label for="HPF">Highpass</label>
+          <input type="radio" id="LPF" name="filter" value="LPF"/>
+          <label for="LPF">Lowpass</label>
+        </div>
+        <label>Filter Radius: </label>
+        <div id="Slider"></div>
+      </div>
     </div>
   	<div id="container"></div>
-    <img id="sourceImg" src="../../images/clem_full_moon_strtrk.jpg" style="display:none">
+    <img id="sourceImg" src="../../images/moon_square_256.jpg" style="display:none">
+    <!-- <img id="sourceImg" src="../../images/clem_full_moon_strtrk.jpg" style="display:none"> -->
+    <canvas id="Spectrum" width="256" height="256" style="display:none"></canvas>
+    <canvas id="Result" width="256" height="256" style="display:none"></canvas>
   </body>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

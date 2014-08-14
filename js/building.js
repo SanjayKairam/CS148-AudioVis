@@ -1,7 +1,7 @@
 var createBuilding = function(texMode) {
 	
 	// Base geometry for building
-	var geometry = new THREE.CubeGeometry(lotSize - gapSize, 6, lotSize - gapSize);
+	var geometry = new THREE.CubeGeometry(lotSize - gapSize, 10, lotSize - gapSize);
 
 	// Splice out the floor.
 	geometry.faces.splice(3, 1);

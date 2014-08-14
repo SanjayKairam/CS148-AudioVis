@@ -7,33 +7,6 @@
  *  http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
  */
 
-/*
- * Interface Control Setup
- */
-
-// var sliderValue = 0;
-
-// $("#controls")
-// 	.on("click", function (e) { e.stopPropagation(); })
-// 	.on("mousemove", function (e) { e.stopPropagation(); });
-
-// $('#Slider').slider({
-// 	step: 1, 
-// 	min: 0, 
-// 	max: 128,
-// 	start: function (e, ui) {
-// 		e.stopPropagation();
-// 	},
-// 	slide: function (e, ui) {
-// 		e.stopPropagation();
-// 	},
-// 	change: function(e, ui) {
-// 		e.stopPropagation();
-// 		console.log(ui.value);
-// 		sliderValue = $('#Slider').slider('option', 'value')
-// 		updateMoonTexture();
-// 	}
-// });
 
 /*******************
  * Animating Stuff *
@@ -116,25 +89,49 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // Sky
-var skyGeom = new THREE.CubeGeometry(110, 80, 110);
+var skyGeom = new THREE.CubeGeometry(110, 110, 110);
 skyGeom.faces.splice(3, 1);
 
-var spectrum = document.createElement("canvas").getContext('2d');
+var spectrum = document.querySelector('#Spectrum').getContext('2d');
+spectrum.fillStyle = '#ffffff';
+spectrum.fillRect(0, 0, spectrum.canvas.width, spectrum.canvas.height);
+
+var imgW = 256,
+	imgH = 256,
+	re = [],
+	im = [];
 
 var image = new Image();
-image.src = '../../images/clem_full_moon_strtrk.jpg';
+image.src = '../../images/moon_square_256.jpg';
+image.addEventListener('load', function(e) {
+	imgW = image.width,
+	imgH = image.height,
+	re = [],
+	im = [];
+	try {
+	  FFT.init(imgW);
+	  FrequencyFilter.init(imgW);
+	  SpectrumViewer.init(spectrum);
+	  //apply($('input[name=filter]:checked').val());
+	} catch(e) {
+	  alert(e);
+	}
+}, false);
 
 var moonSource = document.createElement("canvas");
-moonSource.width = 1100;
-moonSource.height = 800;
+moonSource.width = 256;
+moonSource.height = 256;
 
 var moonSourceCtx = moonSource.getContext("2d");
 moonSourceCtx.drawImage(image, 0, 0);						// Moon context now contains moon image data.
 
-var moonResult = document.createElement("canvas")
-moonResult.width = 1100;
-moonResult.height = 800;
+var moonResult = document.querySelector('#Result');
+moonResult.width = 256;
+moonResult.height = 256;
+
 var result = moonResult.getContext("2d");
+result.fillStyle = '#000000';
+result.fillRect(0, 0, result.canvas.width, result.canvas.height);
 
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
@@ -146,21 +143,95 @@ var skyMaterials = [
 ];
 var skyMat = new THREE.MeshFaceMaterial(skyMaterials);
 var sky = new THREE.Mesh(skyGeom, skyMat);
-sky.position.set(0, 40, 0);
+sky.position.set(0, 55, 0);
 scene.add(sky);
 
-function updateMoonTexture() {
-	console.log("update moon texture with slider value: " + sliderValue);
-	var imgData = moonSourceCtx.getImageData(0, 0, 1100, 800);
-	/* Manipulate moon image data */
-	result.putImageData(imgData, 0, 0);
+function updateMoonTexture(val) {
 
-	var moonTexture = new THREE.Texture(moonResult);
-	moonTexture.needsUpdate = true;
-	sky.material.materials[5].map = moonTexture;
+	var moonResult = document.querySelector('#Result');
+	moonResult.width = 256;
+	moonResult.height = 256;
+
+	var result = moonResult.getContext("2d");
+	result.fillStyle = '#000000';
+	result.fillRect(0, 0, result.canvas.width, result.canvas.height);
+
+	function apply(type) {
+	  console.log("Apply with type: " + type);
+	  try {
+	    spectrum.drawImage(image, 0, 0);							// draw image on to spectrum
+	    console.log(imgW);
+	    console.log(imgH);
+	    console.log("apply 0");
+	    var src = spectrum.getImageData(0, 0, imgW, imgH),			// get the image data
+	        data = src.data,										// I guess this is the data data?
+	        val = Math.min(Math.max($('#Slider').slider('option', 'value'), 100), 5000),	// clamped slider val
+	        radius = Math.round((127 * val - 7800) / 4900);			// mapped back to normal amounts
+	        i = 0,
+	        val = 0,
+	        p = 0;
+	    console.log(val);
+	    console.log(radius);
+	    for(var y=0; y<h; y++) {
+	      i = y*w;
+	      for(var x=0; x<w; x++) {
+	        re[i + x] = data[(i << 2) + (x << 2)];
+	        im[i + x] = 0.0;
+	      }
+	    }
+	    console.log("apply 1")
+	    FFT.fft2d(re, im);
+	    console.log("apply 2");
+	    FrequencyFilter.swap(re, im);
+	    if(type == 'HPF') {
+	      FrequencyFilter.HPF(re, im, radius);
+	    } else {
+	      FrequencyFilter.LPF(re, im, radius);
+	    }
+	    console.log("apply 3");
+	    //SpectrumViewer.render(re, im, true);
+	    console.log("apply 4");
+	    FrequencyFilter.swap(re, im);
+	    FFT.ifft2d(re, im);
+	    console.log("apply 5")
+	    for(var y=0; y<h; y++) {
+	      i = y*w;
+	      for(var x=0; x<w; x++) {
+	        val = re[i + x];
+	        val = val > 255 ? 255 : val < 0 ? 0 : val;
+	        p = (i << 2) + (x << 2);
+	        data[p] = data[p + 1] = data[p + 2] = val;
+	      }
+	    }
+	    console.log("apply 6");
+	    result.putImageData(src, 0, 0);
+		var moonTexture = new THREE.Texture(moonResult);
+		moonTexture.needsUpdate = true;
+		sky.material.materials[5].map = moonTexture;
+	    console.log("apply 7");
+	  } catch(e) {
+	    alert(e);
+	  }
+	}
+
+	function checkTypedArray() {
+	  try {
+	    var u8 = new Uint8Array(1),
+	        f64 = new Float64Array(1);
+	  } catch(e) {
+	    console.log(e);
+	  }
+	}
+
+	var imgData = moonSourceCtx.getImageData(0, 0, 256, 256);
+	apply("LPF");
+	// result.putImageData(imgData, 0, 0);
+	// var moonTexture = new THREE.Texture(moonResult);
+	// moonTexture.needsUpdate = true;
+	// sky.material.materials[5].map = moonTexture;
 }
 
-updateMoonTexture();
+updateMoonTexture($('#Slider').slider('option', 'value'));
 
 // Fog (duh)
 // scene.fog = new THREE.Fog(0x333333, 50, 150);
@@ -184,7 +255,7 @@ for (var i = 0 ; i < citySize ; i += 1) {
 		var jPos = (j * lotSize) + (Math.floor(j/4) * roadWidth) - centerOffset;
 
 		cubes[i][j] = createBuilding("night");
-		cubes[i][j].position = new THREE.Vector3(iPos, 3, jPos);
+		cubes[i][j].position = new THREE.Vector3(iPos, 5, jPos);
 		cubes[i][j].castShadow = true;
 		cubes[i][j].receiveShadow = true;
 		scene.add(cubes[i][j]);
@@ -236,6 +307,7 @@ var treecallback = function(geometry) {
 		// clones[i].position.x = radius * Math.cos(theta);
 		// clones[i].position.z = radius * Math.sin(theta);
 		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
+		clones[i].rotation.y = 2 * Math.PI * Math.random();
 		clones[i].castShadow = true;
 		clones[i].receiveShadow = true;
 		scene.add(clones[i]);
@@ -346,7 +418,7 @@ renderer.shadowMapSoft = true;
 
 // Moonlight
 var moonlight = new THREE.SpotLight(0xffffff, 1.0);
-moonlight.position.set(5, 40, -55);
+moonlight.position.set(-15, 55, -55);
 moonlight.castShadow = true;
 moonlight.shadowDarkness = 0.5;
 scene.add(moonlight);
@@ -375,7 +447,7 @@ var render = function () {
 			var scale = (array[arrIdx] + boost) / 80;
 
 			cubes[xCoord][zCoord].scale.y = (scale < 1 ? 1 : scale);
-			cubes[xCoord][zCoord].position.y = 3 * cubes[xCoord][zCoord].scale.y;
+			cubes[xCoord][zCoord].position.y = 5 * cubes[xCoord][zCoord].scale.y;
 		}
 
 		// Moving Cars
