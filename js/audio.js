@@ -63,7 +63,8 @@ $('#Slider').slider({
 });
 
 function updateAudio(sliderValue) {
-	filter.frequency.value
+	filter.frequency.value= sliderValue;
+	//TODO: FIND OUT HOW TO UPDATE AUDIO WITH THIS NEW FILTER VALUE
 }
 
 request.onload = function() {
