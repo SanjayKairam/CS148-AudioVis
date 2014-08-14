@@ -11,7 +11,7 @@
  * Interface Control Setup
  */
 
-var sliderValue;
+var sliderValue = 0;
 
 $("#controls")
 	.on("click", function (e) { e.stopPropagation(); })
@@ -32,30 +32,8 @@ $('#Slider').slider({
 		console.log(ui.value);
 		sliderValue = $('#Slider').slider('option', 'value')
 		updateMoonTexture();
-		//apply($('input[name=filter]:checked').val());
 	}
 });
-
-// MOON TEXTURE CREATION / UPDATING
-
-var moonSource = document.createElement("canvas");
-moonSource.width = 1100;
-moonSource.height = 800;
-
-var moonContext = moonSource.getContext("2d");
-
-var moonImage = new Image();
-moonImage.src = '../../images/clem_full_moon_strtrk.jpg';
-moonSource.drawImage(moonSource, 0, 0);
-
-function updateMoonTexture() {
-	imgData = moonContext.getImageData(0, 0, 1100, 800);
-	moonContext.putImageData(imgData,0,0);
-	moonTexture = new THREE.Texture(moonCanvas);
-	moonTexture.needsUpdate = true;
-
-	sky.material.materials[5].map = moonTexture;
-}
 
 /*******************
  * Animating Stuff *
@@ -88,7 +66,7 @@ var w = $(window).width(),
 	mode = "day";
 	far = 3000;
 
-var citySize = 32,				// # buildings in a row and column
+var citySize = 8,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
 
 	lotSize = 2,
@@ -96,19 +74,6 @@ var citySize = 32,				// # buildings in a row and column
 
 	// lotSize = 3,
 	 gapSize = 0.5;
-
-// var view_angle = 45,
-// 	aspect_ratio = w / h,
-// 	near = 1,
-// 	mode = "day";
-// 	far = 3000;
-
-// var citySize = 32,				// # buildings in a row and column
-// 	blockSize = 4,				// # buildings in a block [still to be implemented]
-
-// 	lotSize = 3,
-// 	roadWidth = 2.5,
-// 	gapSize = 0.5;
 
 
 // These 3 lines get repeated a lot!
@@ -150,9 +115,26 @@ ground.rotation.x = Math.PI * 3 / 2;
 ground.receiveShadow = true;
 scene.add(ground);
 
-// Sky: Day Side
+// Sky
 var skyGeom = new THREE.CubeGeometry(110, 80, 110);
 skyGeom.faces.splice(3, 1);
+
+var spectrum = document.createElement("canvas").getContext('2d');
+
+var image = new Image();
+image.src = '../../images/clem_full_moon_strtrk.jpg';
+
+var moonSource = document.createElement("canvas");
+moonSource.width = 1100;
+moonSource.height = 800;
+
+var moonSourceCtx = moonSource.getContext("2d");
+moonSourceCtx.drawImage(image, 0, 0);						// Moon context now contains moon image data.
+
+var moonResult = document.createElement("canvas")
+moonResult.width = 1100;
+moonResult.height = 800;
+var result = moonResult.getContext("2d");
 
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
@@ -160,12 +142,23 @@ var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#111122", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
-	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
+	new THREE.MeshBasicMaterial({ map: null, side: THREE.BackSide }),
 ];
 var skyMat = new THREE.MeshFaceMaterial(skyMaterials);
 var sky = new THREE.Mesh(skyGeom, skyMat);
 sky.position.set(0, 40, 0);
 scene.add(sky);
+
+function updateMoonTexture() {
+	console.log("update moon texture with slider value: " + sliderValue);
+	var imgData = moonSourceCtx.getImageData(0, 0, 1100, 800);
+	/* Manipulate moon image data */
+	result.putImageData(imgData, 0, 0);
+
+	var moonTexture = new THREE.Texture(moonResult);
+	moonTexture.needsUpdate = true;
+	sky.material.materials[5].map = moonTexture;
+}
 
 updateMoonTexture();
 
@@ -243,6 +236,8 @@ var treecallback = function(geometry) {
 		// clones[i].position.x = radius * Math.cos(theta);
 		// clones[i].position.z = radius * Math.sin(theta);
 		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
+		clones[i].castShadow = true;
+		clones[i].receiveShadow = true;
 		scene.add(clones[i]);
 
 		/* trees on night side */
@@ -282,6 +277,8 @@ loader.load('../../images/veyron/VeyronNoUv_bin.js',
 		cars[i].position.x = slot;
 		cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.015; 
 	    cars[i].position.y = 0.6;
+		cars[i].castShadow = true;
+		cars[i].receiveShadow = true;
 		scene.add(cars[i]);
 
 		/* cars on night side */
@@ -411,7 +408,7 @@ var render = function () {
 		*/
 	}
 
-	updateMoonTexture();
+	//updateMoonTexture();
 
 	// Set render function to next animation frame
 	requestAnimFrame(render);
