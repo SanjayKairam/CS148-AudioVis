@@ -60,7 +60,7 @@ window.requestAnimFrame = (function(){
 var w = $(window).width(),
 	h = $(window).height();
 
-var view_angle = 45,
+	var view_angle = 45,
 	aspect_ratio = w / h,
 	near = 1,
 	mode = "day";
@@ -69,9 +69,24 @@ var view_angle = 45,
 var citySize = 32,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
 
-	lotSize = 3,
-	roadWidth = 2.5,
-	gapSize = 0.5;
+	lotSize = 2,
+	roadWidth = 4;
+
+	// lotSize = 3,
+	 gapSize = 0.5;
+
+// var view_angle = 45,
+// 	aspect_ratio = w / h,
+// 	near = 1,
+// 	mode = "day";
+// 	far = 3000;
+
+// var citySize = 32,				// # buildings in a row and column
+// 	blockSize = 4,				// # buildings in a block [still to be implemented]
+
+// 	lotSize = 3,
+// 	roadWidth = 2.5,
+// 	gapSize = 0.5;
 
 
 // These 3 lines get repeated a lot!
@@ -183,7 +198,7 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 /***************
  * Create a tree *
  ***************/
-var treeTex = THREE.ImageUtils.loadTexture('../../images/tree_pink.jpg');
+var treeTex = THREE.ImageUtils.loadTexture('../../images/bark.jpg');
 var radius = 50;
 var numTrees = 34;
 var tree_gap = 12.5;
@@ -354,6 +369,7 @@ var render = function () {
 			cubes[xCoord][zCoord].position.y = 3 * cubes[xCoord][zCoord].scale.y;
 		}
 
+		// Moving Cars
 		for (var i = 0; i < cars.length; i += 1) {
 			if ((boost / i) > i * 1.5 ){
 				cars[i].z = -50.0;
