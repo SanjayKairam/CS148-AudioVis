@@ -31,9 +31,31 @@ $('#Slider').slider({
 		e.stopPropagation();
 		console.log(ui.value);
 		sliderValue = $('#Slider').slider('option', 'value')
+		updateMoonTexture();
 		//apply($('input[name=filter]:checked').val());
 	}
 });
+
+// MOON TEXTURE CREATION / UPDATING
+
+var moonSource = document.createElement("canvas");
+moonSource.width = 1100;
+moonSource.height = 800;
+
+var moonContext = moonSource.getContext("2d");
+
+var moonImage = new Image();
+moonImage.src = '../../images/clem_full_moon_strtrk.jpg';
+moonSource.drawImage(moonSource, 0, 0);
+
+function updateMoonTexture() {
+	imgData = moonContext.getImageData(0, 0, 1100, 800);
+	moonContext.putImageData(imgData,0,0);
+	moonTexture = new THREE.Texture(moonCanvas);
+	moonTexture.needsUpdate = true;
+
+	sky.material.materials[5].map = moonTexture;
+}
 
 /*******************
  * Animating Stuff *
@@ -117,38 +139,20 @@ scene.add(ground);
 var skyGeom = new THREE.CubeGeometry(110, 80, 110);
 skyGeom.faces.splice(3, 1);
 
-var moonCanvas = document.createElement("canvas");
-moonCanvas.width = 1100;
-moonCanvas.height = 800;
-
-var moonContext = moonCanvas.getContext("2d");
-
-var moonImage = new Image();
-moonImage.src = '../../images/clem_full_moon_strtrk.jpg';
-moonContext.drawImage(moonImage, 0, 0);
-
-var imgData = moonContext.getImageData(0, 0, 1100, 800);
-moonContext.putImageData(imgData,0,0);
-
-var moonTexture = new THREE.Texture(moonCanvas);
-moonTexture.needsUpdate = true;
-
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#111122", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
-	new THREE.MeshBasicMaterial({ 
-		map: moonTexture,
-		// map: THREE.ImageUtils.loadTexture('../../images/clem_full_moon_strtrk.jpg'), 
-		side: THREE.BackSide
-	}),
+	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 ];
 var skyMat = new THREE.MeshFaceMaterial(skyMaterials);
 var sky = new THREE.Mesh(skyGeom, skyMat);
 sky.position.set(0, 40, 0);
 scene.add(sky);
+
+updateMoonTexture();
 
 // Fog (duh)
 // scene.fog = new THREE.Fog(0x333333, 50, 150);
@@ -391,24 +395,7 @@ var render = function () {
 		*/
 	}
 
-	// Update moon texture
-	moonContext.drawImage(moonImage, 0, 0);
-
-	imgData = moonContext.getImageData(0, 0, 1100, 800);
-	if (boost > 50) {
-		for (var i=0;i<imgData.data.length;i+=4)
-		  {
-		  imgData.data[i]=255-imgData.data[i];
-		  imgData.data[i+1]=255-imgData.data[i+1];
-		  imgData.data[i+2]=255-imgData.data[i+2];
-		  imgData.data[i+3]=255;
-		  }
-	}
-	moonContext.putImageData(imgData,0,0);
-	moonTexture = new THREE.Texture(moonCanvas);
-	moonTexture.needsUpdate = true;
-
-	sky.material.materials[5].map = moonTexture;
+	updateMoonTexture();
 
 	// Set render function to next animation frame
 	requestAnimFrame(render);
