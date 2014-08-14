@@ -31,6 +31,37 @@ var request = new XMLHttpRequest();
 request.open("GET", url, true);
 request.responseType = "arraybuffer";
 
+//slider stuff:
+
+/*
+ * Interface Control Setup
+ */
+
+var sliderValue = 5000;
+
+$("#controls")
+	.on("click", function (e) { e.stopPropagation(); })
+	.on("mousemove", function (e) { e.stopPropagation(); });
+
+$('#Slider').slider({
+	step: 1, 
+	min: 100, 
+	max: 5000,
+	start: function (e, ui) {
+		e.stopPropagation();
+	},
+	slide: function (e, ui) {
+		e.stopPropagation();
+	},
+	change: function(e, ui) {
+		e.stopPropagation();
+		console.log(ui.value);
+		sliderValue = $('#Slider').slider('option', 'value')
+		//apply($('input[name=filter]:checked').val());
+		updateAudio(sliderValue);
+	}
+});
+
 request.onload = function() {
 	context.decodeAudioData(
 		request.response,
@@ -50,10 +81,19 @@ request.onload = function() {
 			source = context.createBufferSource();
 			source.buffer = buffer;
 			source.loop = true;
+
+			var filter = context.createBiquadFilter();
+			filter.type = 0; //LOWPASS
+			filter.frequency.value = sliderValue;
+			source.connect(filter);
+			filter.connect(context.destination);
 			
 			source.connect(analyser);
 			analyser.connect(sourceJs);
-			source.connect(context.destination);
+
+			this.source = source;
+			this.filter = filter;
+			//source.connect(context.destination);
 			
 			sourceJs.onaudioprocess = function(e) {
 				array = new Uint8Array(analyser.frequencyBinCount);
@@ -110,6 +150,13 @@ function play() {
 	source.start(0);
 	//source.noteOn(0);
 }
+
+function updateAudio(sliderValue) {
+	this.filter.frequency.value= sliderValue;
+	//source.connect(filter);
+	//filter.connect(context.destination);
+}
+
 
 $(window).resize(function() {
 	if($('#play').length === 1) {

@@ -11,29 +11,29 @@
  * Interface Control Setup
  */
 
-var sliderValue = 0;
+// var sliderValue = 0;
 
-$("#controls")
-	.on("click", function (e) { e.stopPropagation(); })
-	.on("mousemove", function (e) { e.stopPropagation(); });
+// $("#controls")
+// 	.on("click", function (e) { e.stopPropagation(); })
+// 	.on("mousemove", function (e) { e.stopPropagation(); });
 
-$('#Slider').slider({
-	step: 1, 
-	min: 0, 
-	max: 128,
-	start: function (e, ui) {
-		e.stopPropagation();
-	},
-	slide: function (e, ui) {
-		e.stopPropagation();
-	},
-	change: function(e, ui) {
-		e.stopPropagation();
-		console.log(ui.value);
-		sliderValue = $('#Slider').slider('option', 'value')
-		updateMoonTexture();
-	}
-});
+// $('#Slider').slider({
+// 	step: 1, 
+// 	min: 0, 
+// 	max: 128,
+// 	start: function (e, ui) {
+// 		e.stopPropagation();
+// 	},
+// 	slide: function (e, ui) {
+// 		e.stopPropagation();
+// 	},
+// 	change: function(e, ui) {
+// 		e.stopPropagation();
+// 		console.log(ui.value);
+// 		sliderValue = $('#Slider').slider('option', 'value')
+// 		updateMoonTexture();
+// 	}
+// });
 
 /*******************
  * Animating Stuff *
