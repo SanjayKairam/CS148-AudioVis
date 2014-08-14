@@ -7,6 +7,31 @@
  *  http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
  */
 
+/*
+ * Interface Control Setup
+ */
+
+$("#controls")
+	.on("click", function (e) { e.stopPropagation(); })
+	.on("mousemove", function (e) { e.stopPropagation(); });
+
+$('#Slider').slider({
+	step: 1, 
+	min: 0, 
+	max: 128,
+	start: function (e, ui) {
+		e.stopPropagation();
+	},
+	slide: function (e, ui) {
+		e.stopPropagation();
+	},
+	change: function(e, ui) {
+		e.stopPropagation();
+		console.log(ui.value);
+		//apply($('input[name=filter]:checked').val());
+	}
+});
+
 /*******************
  * Animating Stuff *
  *******************/
@@ -69,7 +94,7 @@ $("#container").append(renderer.domElement);
 // Ground
 var groundGeom = new THREE.PlaneGeometry(110, 110);
 
-var groundTex = THREE.ImageUtils.loadTexture('../../images/asphalt_texture409.jpg');
+var groundTex = THREE.ImageUtils.loadTexture('../../images/Tarmac_Road_Texture_Pack_5x_by_suicidecrew.jpg');
 groundTex.wrapS = THREE.RepeatWrapping;
 groundTex.wrapT = THREE.RepeatWrapping;
 groundTex.repeat.set(9, 9);
@@ -277,7 +302,7 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 // Possibly different lighting settings for different modes?
 
 // Add Ambient light
-var light = new THREE.AmbientLight(0x777777);
+var light = new THREE.AmbientLight(0x333333);
 scene.add(light);
 
 renderer.shadowMapEnabled = true;

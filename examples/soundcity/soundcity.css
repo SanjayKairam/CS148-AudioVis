@@ -89,3 +89,7 @@ canvas{
 	left: 20px;
 	padding: 5px;
 }
+
+#slider {
+	width: 200px;
+}
