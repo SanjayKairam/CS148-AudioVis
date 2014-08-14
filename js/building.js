@@ -3,6 +3,9 @@ var createBuilding = function(texMode) {
 	// Base geometry for building
 	var geometry = new THREE.CubeGeometry(lotSize - gapSize, 6, lotSize - gapSize);
 
+	// Splice out the floor.
+	geometry.faces.splice(3, 1);
+
 	// Set UV (texture coordinates) for the top face (roof)
 	geometry.faceVertexUvs[0][2][0].set( 0, 0 );
 	geometry.faceVertexUvs[0][2][1].set( 0, 0 );
@@ -18,6 +21,7 @@ var createBuilding = function(texMode) {
 
 	// Create the material
 	var material = new THREE.MeshLambertMaterial({
+		emissive: new THREE.Color(0xaaaa33),
 		map : texture,
 		vertexColors : THREE.VertexColors
 	});
