@@ -45,8 +45,8 @@ $("#controls")
 
 $('#Slider').slider({
 	step: 1, 
-	min: 0, 
-	max: 128,
+	min: 100, 
+	max: 5000,
 	start: function (e, ui) {
 		e.stopPropagation();
 	},
@@ -58,8 +58,13 @@ $('#Slider').slider({
 		console.log(ui.value);
 		sliderValue = $('#Slider').slider('option', 'value')
 		//apply($('input[name=filter]:checked').val());
+		updateAudio(sliderValue);
 	}
 });
+
+function updateAudio(sliderValue) {
+	filter.frequency.value
+}
 
 request.onload = function() {
 	context.decodeAudioData(
@@ -80,10 +85,16 @@ request.onload = function() {
 			source = context.createBufferSource();
 			source.buffer = buffer;
 			source.loop = true;
+
+			var filter = context.createBiquadFilter();
+			filter.type = 0; //LOWPASS
+			filter.frequency.value = 1000;
+			source.connect(filter);
+			filter.connect(context.destination);
 			
 			source.connect(analyser);
 			analyser.connect(sourceJs);
-			source.connect(context.destination);
+			//source.connect(context.destination);
 			
 			sourceJs.onaudioprocess = function(e) {
 				array = new Uint8Array(analyser.frequencyBinCount);
