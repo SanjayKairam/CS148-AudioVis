@@ -89,7 +89,7 @@ request.onload = function() {
 
 			var filter = context.createBiquadFilter();
 			filter.type = 0; //LOWPASS
-			filter.frequency.value = 1000;
+			filter.frequency.value = sliderValue;
 			source.connect(filter);
 			filter.connect(context.destination);
 			
