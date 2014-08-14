@@ -31,6 +31,36 @@ var request = new XMLHttpRequest();
 request.open("GET", url, true);
 request.responseType = "arraybuffer";
 
+//slider stuff:
+
+/*
+ * Interface Control Setup
+ */
+
+var sliderValue;
+
+$("#controls")
+	.on("click", function (e) { e.stopPropagation(); })
+	.on("mousemove", function (e) { e.stopPropagation(); });
+
+$('#Slider').slider({
+	step: 1, 
+	min: 0, 
+	max: 128,
+	start: function (e, ui) {
+		e.stopPropagation();
+	},
+	slide: function (e, ui) {
+		e.stopPropagation();
+	},
+	change: function(e, ui) {
+		e.stopPropagation();
+		console.log(ui.value);
+		sliderValue = $('#Slider').slider('option', 'value')
+		//apply($('input[name=filter]:checked').val());
+	}
+});
+
 request.onload = function() {
 	context.decodeAudioData(
 		request.response,
