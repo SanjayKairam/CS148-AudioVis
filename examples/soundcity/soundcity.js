@@ -82,18 +82,33 @@ window.requestAnimFrame = (function(){
 var w = $(window).width(),
 	h = $(window).height();
 
-var view_angle = 45,
+	var view_angle = 45,
 	aspect_ratio = w / h,
 	near = 1,
 	mode = "day";
 	far = 3000;
 
-var citySize = 16,				// # buildings in a row and column
+var citySize = 32,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
 
-	lotSize = 3,
-	roadWidth = 3,
+	lotSize = 2,
+	roadWidth = 4;
+
+	// lotSize = 3,
 	 gapSize = 0.5;
+
+// var view_angle = 45,
+// 	aspect_ratio = w / h,
+// 	near = 1,
+// 	mode = "day";
+// 	far = 3000;
+
+// var citySize = 32,				// # buildings in a row and column
+// 	blockSize = 4,				// # buildings in a block [still to be implemented]
+
+// 	lotSize = 3,
+// 	roadWidth = 2.5,
+// 	gapSize = 0.5;
 
 
 // These 3 lines get repeated a lot!
@@ -195,93 +210,93 @@ xzCoords.sort(function(a,b) { return centerDist(a,citySize) - centerDist(b,cityS
 /***************
  * Create a tree *
  ***************/
-// var treeTex = THREE.ImageUtils.loadTexture('../../images/tree_pink.jpg');
-// var radius = 50;
-// var numTrees = 34;
-// var tree_gap = 12.5;
-// var loader = new THREE.JSONLoader();
-// var tree, treegeo, treeMat;
-// var clones = [];
-// var treecallback = function(geometry) {
-// 	treegeo = geometry;
-// 	treeMat = new THREE.MeshLambertMaterial( {map:treeTex} ); 
-// 	var x_pos = -1 * radius;
-// 	var z_pos = x_pos;
-// 	for (var i = 0; i < numTrees; i += 1) {
-// 		clones[i] = new THREE.Mesh(geometry, treeMat); 
-// 		if (i == 9) {
-// 			z_pos = radius;
-// 			x_pos = -1 * radius;
-// 		}
-// 		if (i == 18) {
-// 			x_pos = -1 * radius;
-// 			z_pos = -1 * radius + tree_gap;
-// 		}
-// 		if (i == 26) {
-// 			x_pos = radius;
-// 			z_pos = -1 * radius;
-// 		}
-// 		clones[i].position.x = x_pos;
-// 		clones[i].position.z = z_pos;
+var treeTex = THREE.ImageUtils.loadTexture('../../images/bark.jpg');
+var radius = 50;
+var numTrees = 34;
+var tree_gap = 12.5;
+var loader = new THREE.JSONLoader();
+var tree, treegeo, treeMat;
+var clones = [];
+var treecallback = function(geometry) {
+	treegeo = geometry;
+	treeMat = new THREE.MeshLambertMaterial( {map:treeTex} ); 
+	var x_pos = -1 * radius;
+	var z_pos = x_pos;
+	for (var i = 0; i < numTrees; i += 1) {
+		clones[i] = new THREE.Mesh(geometry, treeMat); 
+		if (i == 9) {
+			z_pos = radius;
+			x_pos = -1 * radius;
+		}
+		if (i == 18) {
+			x_pos = -1 * radius;
+			z_pos = -1 * radius + tree_gap;
+		}
+		if (i == 26) {
+			x_pos = radius;
+			z_pos = -1 * radius;
+		}
+		clones[i].position.x = x_pos;
+		clones[i].position.z = z_pos;
 
-// 		// var theta = 2.0 * Math.PI * i / numTrees;
-// 		// clones[i].position.x = radius * Math.cos(theta);
-// 		// clones[i].position.z = radius * Math.sin(theta);
-// 		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
-// 		scene.add(clones[i]);
+		// var theta = 2.0 * Math.PI * i / numTrees;
+		// clones[i].position.x = radius * Math.cos(theta);
+		// clones[i].position.z = radius * Math.sin(theta);
+		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
+		scene.add(clones[i]);
 
-// 		/* trees on night side */
-// 		/*
-// 		var ni = i + (numTrees / 2);
-// 		clones[ni] = new THREE.Mesh(geometry, treeMat);
-// 		clones[ni].position.x = x_pos;
-// 		clones[ni].position.z = z_pos;
-// 		clones[ni].scale.x = clones[ni].scale.z = 15.0;
-// 		clones[ni].scale.y = -15.0;
-// 		scene.add(clones[ni]);
-// 		*/
+		/* trees on night side */
+		/*
+		var ni = i + (numTrees / 2);
+		clones[ni] = new THREE.Mesh(geometry, treeMat);
+		clones[ni].position.x = x_pos;
+		clones[ni].position.z = z_pos;
+		clones[ni].scale.x = clones[ni].scale.z = 15.0;
+		clones[ni].scale.y = -15.0;
+		scene.add(clones[ni]);
+		*/
 
-// 		if (i < 18) x_pos += tree_gap;
-// 		if (i >= 19) z_pos += tree_gap;
-// 	}
+		if (i < 18) x_pos += tree_gap;
+		if (i >= 19) z_pos += tree_gap;
+	}
 
-// }
-// loader.load('../../images/tree.js', treecallback);
+}
+loader.load('../../images/tree.js', treecallback);
 
 /************
  * Create cars *
  ************/
-// var cars = [];
-// var step = 6;
-// var numCars = 14;
-// var loader = new THREE.BinaryLoader();
-// loader.load('../../images/veyron/VeyronNoUv_bin.js', 
-// 	function(geometry) { 
-// 	for (var i = 0; i < (numCars / 2); i += 1) {
-// 	    var color = new THREE.MeshLambertMaterial( { color: rainbow((numCars / 2), i) } ); 
-// 	    //var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
-// 	    cars[i] = new THREE.Mesh( geometry, color );
-// 	    cars[i].position.z = -50.0;
-// 		cars[i].visibility = true;
-// 		var slot = (0 - lotSize - step * 3 * lotSize) + (6 * i * lotSize) + (gapSize * 2);
-// 		cars[i].position.x = slot;
-// 		cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.015; 
-// 	    cars[i].position.y = 0.6;
-// 		scene.add(cars[i]);
+var cars = [];
+var step = 6;
+var numCars = 14;
+var loader = new THREE.BinaryLoader();
+loader.load('../../images/veyron/VeyronNoUv_bin.js', 
+	function(geometry) { 
+	for (var i = 0; i < (numCars / 2); i += 1) {
+	    var color = new THREE.MeshLambertMaterial( { color: rainbow((numCars / 2), i) } ); 
+	    //var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
+	    cars[i] = new THREE.Mesh( geometry, color );
+	    cars[i].position.z = -50.0;
+		cars[i].visibility = true;
+		var slot = (0 - lotSize - step * 3 * lotSize) + (6 * i * lotSize) + (gapSize * 2);
+		cars[i].position.x = slot;
+		cars[i].scale.x = cars[i].scale.y = cars[i].scale.z = 0.015; 
+	    cars[i].position.y = 0.6;
+		scene.add(cars[i]);
 
-// 		/* cars on night side */
-// 		/*
-// 		cars[i + (numCars / 2)] = new THREE.Mesh(geometry, color);
-// 	    cars[i + (numCars / 2)].position.z = -50.0;
-// 		cars[i + (numCars / 2)].visibility = false;
-// 		cars[i + (numCars / 2)].position.x = slot;
-// 		cars[i + (numCars / 2)].scale.x = cars[i + (numCars / 2)].scale.z = 0.015; 
-// 	    cars[i + (numCars / 2)].position.y = -0.6;
-// 	    cars[i + (numCars / 2)].scale.y = -0.015;
-// 		scene.add(cars[i + (numCars / 2)]);
-// 		*/
-// 	}
-// });
+		/* cars on night side */
+		/*
+		cars[i + (numCars / 2)] = new THREE.Mesh(geometry, color);
+	    cars[i + (numCars / 2)].position.z = -50.0;
+		cars[i + (numCars / 2)].visibility = false;
+		cars[i + (numCars / 2)].position.x = slot;
+		cars[i + (numCars / 2)].scale.x = cars[i + (numCars / 2)].scale.z = 0.015; 
+	    cars[i + (numCars / 2)].position.y = -0.6;
+	    cars[i + (numCars / 2)].scale.y = -0.015;
+		scene.add(cars[i + (numCars / 2)]);
+		*/
+	}
+});
 
 
 /***************
@@ -366,25 +381,26 @@ var render = function () {
 			cubes[xCoord][zCoord].position.y = 3 * cubes[xCoord][zCoord].scale.y;
 		}
 
-		// for (var i = 0; i < cars.length; i += 1) {
-		// 	if ((boost / i) > i * 1.5 ){
-		// 		cars[i].z = -50.0;
-		// 		cars[i].visibility = true;
-		// 	}
-		// 	if (cars[i].position.z <= 50.0) {
-		// 		cars[i].position.z += boost / (100 + (i * 10));	
-		// 	} else {
-		// 		cars[i].position.z = -50.0;
-		// 		cars[i].visibility = false;
-		// 	}
-		// }
+		// Moving Cars
+		for (var i = 0; i < cars.length; i += 1) {
+			if ((boost / i) > i * 1.5 ){
+				cars[i].z = -50.0;
+				cars[i].visibility = true;
+			}
+			if (cars[i].position.z <= 50.0) {
+				cars[i].position.z += boost / (100 + (i * 10));	
+			} else {
+				cars[i].position.z = -50.0;
+				cars[i].visibility = false;
+			}
+		}
 
 		/***** bouncing day trees */
 		
-		// for (var i = 0; i < numTrees; i += 1) {
-		// 	if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 12.0);
-		// 	else clones[i].scale.y = (scale < 1 ? 12.0 : scale * 10.0);
-		// }
+		for (var i = 0; i < numTrees; i += 1) {
+			if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 12.0);
+			else clones[i].scale.y = (scale < 1 ? 12.0 : scale * 10.0);
+		}
 		/***** bouncing night trees */
 		/*
 		for (var i = (numTrees / 2); i < numTrees; i += 1) {
