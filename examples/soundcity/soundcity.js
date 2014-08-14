@@ -11,6 +11,8 @@
  * Interface Control Setup
  */
 
+var sliderValue;
+
 $("#controls")
 	.on("click", function (e) { e.stopPropagation(); })
 	.on("mousemove", function (e) { e.stopPropagation(); });
@@ -28,6 +30,7 @@ $('#Slider').slider({
 	change: function(e, ui) {
 		e.stopPropagation();
 		console.log(ui.value);
+		sliderValue = $('#Slider').slider('option', 'value')
 		//apply($('input[name=filter]:checked').val());
 	}
 });
@@ -113,6 +116,15 @@ scene.add(ground);
 // Sky: Day Side
 var skyGeom = new THREE.CubeGeometry(110, 80, 110);
 skyGeom.faces.splice(3, 1);
+
+var moonCanvas = document.createElement("canvas");
+moonCanvas.width = 1100;
+moonCanvas.height = 800;
+var moonContext = moonCanvas.getContext("2d");
+
+var moonImage = new Image();
+moonImage.src = '../../images/clem_full_moon_strtrk.jpg';
+//moonContext.putImageData(moonImage, 0, 0);
 
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),

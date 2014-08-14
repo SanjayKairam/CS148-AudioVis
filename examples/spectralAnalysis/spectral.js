@@ -37,6 +37,7 @@ $(function() {
     });
 
     function apply(type) {
+      console.log(type);
       try {
         spectrum.drawImage(image, 0, 0);
         var src = spectrum.getImageData(0, 0, w, h),
