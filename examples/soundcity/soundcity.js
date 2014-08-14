@@ -39,7 +39,7 @@ var w = $(window).width(),
 	mode = "day";
 	far = 3000;
 
-var citySize = 8,				// # buildings in a row and column
+var citySize = 32,				// # buildings in a row and column
 	blockSize = 4,				// # buildings in a block [still to be implemented]
 
 	lotSize = 2,

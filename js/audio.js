@@ -99,6 +99,13 @@ request.onload = function() {
 			sourceJs.onaudioprocess = function(e) {
 				array = new Uint8Array(analyser.frequencyBinCount);
 				analyser.getByteFrequencyData(array);
+				console.log(sliderValue);
+				// var cutoffIdx = Math.round(sliderValue / 86);
+				cutoffIdx = Math.round(sliderValue * 256 / 5000);
+				for (var i = cutoffIdx ; i < array.length ; i++) {
+					array[i] = 0;
+				}
+
 				boost = 0;
 				for (var i = 0; i < array.length; i++) {
 		            boost += array[i];
