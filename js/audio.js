@@ -37,7 +37,7 @@ request.responseType = "arraybuffer";
  * Interface Control Setup
  */
 
-var sliderValue;
+var sliderValue = 5000;
 
 $("#controls")
 	.on("click", function (e) { e.stopPropagation(); })
