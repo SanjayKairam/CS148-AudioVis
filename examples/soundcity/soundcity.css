@@ -25,23 +25,6 @@ canvas{
 	height: 100%;
 }
 
-#info {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	padding: 5px;
-	text-align: right;
-}
-
-#info a, #blog a {
-	color: inherit;
-	text-decoration: inherit;
-}
-
-#info a:hover, #blog a:hover {
-	text-decoration: underline;
-}
-
 #info div {
 	padding: 0 5px;
 	display: inline-block;
@@ -51,18 +34,6 @@ canvas{
 	position: relative;
 	top: 9px;
 	border-radius: 3px;
-}
-
-#info #artist {
-	margin-right: 5px;
-}
-
-#info #artist .name {
-	font-size: 0.8em;
-}
-
-#info #artist .song {
-	
 }
 
 #play {
@@ -81,13 +52,6 @@ canvas{
 	width: 64px;
 	background: url('../../images/play.png') left center no-repeat transparent;
 	cursor: pointer;
-}
-
-#blog {
-	position: absolute;
-	bottom: 20px;
-	left: 20px;
-	padding: 5px;
 }
 
 /* From Spectral.css */
