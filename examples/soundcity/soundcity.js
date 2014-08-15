@@ -66,7 +66,7 @@ renderer.setSize(w, h);
 $("#container").append(renderer.domElement);
 
 /***************************
- * Create ground, fog, sky *
+ * Create ground, fog, sky, moon *
  ***************************/
 
 // Ground
@@ -118,6 +118,7 @@ image.addEventListener('load', function(e) {
 	}
 }, false);
 
+//Moon
 var moonSource = document.createElement("canvas");
 moonSource.width = 256;
 moonSource.height = 256;
@@ -133,6 +134,7 @@ var result = moonResult.getContext("2d");
 result.fillStyle = '#000000';
 result.fillRect(0, 0, result.canvas.width, result.canvas.height);
 
+//Sky
 var skyMaterials = [
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
 	new THREE.MeshBasicMaterial({ color: "#000000", side: THREE.BackSide }),
@@ -146,6 +148,7 @@ var sky = new THREE.Mesh(skyGeom, skyMat);
 sky.position.set(0, 55, 0);
 scene.add(sky);
 
+//Moon
 function updateMoonTexture(val) {
 
 	var moonResult = document.querySelector('#Result');
@@ -233,8 +236,6 @@ function updateMoonTexture(val) {
 
 updateMoonTexture($('#Slider').slider('option', 'value'));
 
-// Fog (duh)
-// scene.fog = new THREE.Fog(0x333333, 50, 150);
 
 /****************
  * Create cubes *
@@ -303,25 +304,11 @@ var treecallback = function(geometry) {
 		clones[i].position.x = x_pos;
 		clones[i].position.z = z_pos;
 
-		// var theta = 2.0 * Math.PI * i / numTrees;
-		// clones[i].position.x = radius * Math.cos(theta);
-		// clones[i].position.z = radius * Math.sin(theta);
 		clones[i].scale.x = clones[i].scale.y = clones[i].scale.z = 10.0;
 		clones[i].rotation.y = 2 * Math.PI * Math.random();
 		clones[i].castShadow = true;
 		clones[i].receiveShadow = true;
 		scene.add(clones[i]);
-
-		/* trees on night side */
-		/*
-		var ni = i + (numTrees / 2);
-		clones[ni] = new THREE.Mesh(geometry, treeMat);
-		clones[ni].position.x = x_pos;
-		clones[ni].position.z = z_pos;
-		clones[ni].scale.x = clones[ni].scale.z = 15.0;
-		clones[ni].scale.y = -15.0;
-		scene.add(clones[ni]);
-		*/
 
 		if (i < 18) x_pos += tree_gap;
 		if (i >= 19) z_pos += tree_gap;
@@ -352,62 +339,12 @@ loader.load('../../images/veyron/VeyronNoUv_bin.js',
 		cars[i].castShadow = true;
 		cars[i].receiveShadow = true;
 		scene.add(cars[i]);
-
-		/* cars on night side */
-		/*
-		cars[i + (numCars / 2)] = new THREE.Mesh(geometry, color);
-	    cars[i + (numCars / 2)].position.z = -50.0;
-		cars[i + (numCars / 2)].visibility = false;
-		cars[i + (numCars / 2)].position.x = slot;
-		cars[i + (numCars / 2)].scale.x = cars[i + (numCars / 2)].scale.z = 0.015; 
-	    cars[i + (numCars / 2)].position.y = -0.6;
-	    cars[i + (numCars / 2)].scale.y = -0.015;
-		scene.add(cars[i + (numCars / 2)]);
-		*/
 	}
 });
-
-
-/***************
- * Create a cow *
- ***************/
-// var loadr = new THREE.JSONLoader();
-// var cowcallback = function (geometry) {  
-//     var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
-//     cow = new THREE.Mesh( geometry, color );
-//     cow.scale.x = cow.scale.y = cow.scale.z = 10.0; 
-//     cow.position.x = 25;
-//     cow.position.y = 6;
-//     cow.position.z = 25;
-//     scene.add(cow);
-// };
-
-// loadr.load('../../images/cow.js', cowcallback);
-
-/***************
- * Create a bunny *
- ***************/
-// var loadr = new THREE.JSONLoader();
-// var bunnycallback = function (geometry) {  
-//     var color = new THREE.MeshLambertMaterial( { color: randomFairColor(), opacity: 1.0, transparent: false } ); 
-//     bun = new THREE.Mesh( geometry, color );
-//     bun.scale.x = bun.scale.y = bun.scale.z = 20.0; 
-//     bun.position.x = -25;
-//     bun.position.z = 25;
-//     bun.position.y = -.8;
-
-//     scene.add(bun);
-// };
-
-// loadr.load('../../images/bunny.js', bunnycallback);
-
 
 /****************
  * Set lighting *
  ****************/
-
-// TODO - PLAY WITH LIGHTING
-// Possibly different lighting settings for different modes?
 
 // Add Ambient light
 var light = new THREE.AmbientLight(0x333333);
@@ -470,17 +407,7 @@ var render = function () {
 			if (i % 2) clones[i].scale.y = (scale < 1 ? 10.0 : scale * 12.0);
 			else clones[i].scale.y = (scale < 1 ? 12.0 : scale * 10.0);
 		}
-		/***** bouncing night trees */
-		/*
-		for (var i = (numTrees / 2); i < numTrees; i += 1) {
-			if (i % 2) clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
-			else clones[i].scale.y = (scale < 1 ? -15.0 : scale * -12.0);
-
-		}
-		*/
 	}
-
-	//updateMoonTexture();
 
 	// Set render function to next animation frame
 	requestAnimFrame(render);
@@ -507,7 +434,7 @@ function rainbow(numOfSteps, step) {
     return (c);
 }
 
-// Don't forget to call render! That was a stupid problem to debug.
+// Don't forget to call render!
 render();
 
 
