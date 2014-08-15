@@ -31,7 +31,7 @@ var request = new XMLHttpRequest();
 request.open("GET", url, true);
 request.responseType = "arraybuffer";
 
-//slider stuff:
+//Slider controls:
 
 /*
  * Interface Control Setup
@@ -94,8 +94,7 @@ request.onload = function() {
 
 			this.source = source;
 			this.filter = filter;
-			//source.connect(context.destination);
-			
+
 			sourceJs.onaudioprocess = function(e) {
 				array = new Uint8Array(analyser.frequencyBinCount);
 				analyser.getByteFrequencyData(array);
